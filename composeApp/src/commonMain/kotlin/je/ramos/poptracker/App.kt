@@ -1,45 +1,50 @@
 package je.ramos.poptracker
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.MaterialExpressiveTheme
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import je.ramos.poptracker.everyui.theme.ExtendedTheme
+import je.ramos.poptracker.navigation.Screen
+import je.ramos.poptracker.navigation.bottomNavItems
+import je.ramos.poptracker.ui.screens.CollectionScreen
+import je.ramos.poptracker.ui.screens.ExploreScreen
+import je.ramos.poptracker.ui.screens.ProfileScreen
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-import poptracker.composeapp.generated.resources.Res
-import poptracker.composeapp.generated.resources.compose_multiplatform
-
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 @Preview
 fun App() {
-    MaterialExpressiveTheme {
-        var showContent by remember { mutableStateOf(false) }
-        Column(
-            modifier = Modifier
-                .safeContentPadding()
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Button(onClick = { showContent = !showContent }) {
-                Text("Click me!")
-            }
-            AnimatedVisibility(showContent) {
-                val greeting = remember { Greeting().greet() }
-                Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Image(painterResource(Res.drawable.compose_multiplatform), null)
-                    Text("Compose: $greeting")
+    MaterialTheme {
+        ExtendedTheme {
+            var selectedScreen by remember { mutableStateOf(Screen.Explore.route) }
+            
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                bottomBar = {
+                    NavigationBar {
+                        bottomNavItems.forEach { screen ->
+                            NavigationBarItem(
+                                icon = { Icon(painter = painterResource(screen.icon), contentDescription = screen.title) },
+                                label = { Text(screen.title) },
+                                selected = selectedScreen == screen.route,
+                                onClick = { selectedScreen = screen.route }
+                            )
+                        }
+                    }
+                }
+            ) { paddingValues ->
+                when (selectedScreen) {
+                    Screen.Explore.route -> ExploreScreen()
+                    Screen.Collection.route -> CollectionScreen()
+                    Screen.Profile.route -> ProfileScreen()
                 }
             }
         }
