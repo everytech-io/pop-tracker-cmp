@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -18,10 +20,11 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import poptracker.composeapp.generated.resources.Res
 import poptracker.composeapp.generated.resources.compose_multiplatform
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 @Preview
 fun App() {
-    MaterialTheme {
+    MaterialExpressiveTheme {
         var showContent by remember { mutableStateOf(false) }
         Column(
             modifier = Modifier
