@@ -8,30 +8,22 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Badge
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
@@ -45,6 +37,7 @@ import poptracker.composeapp.generated.resources.Res
 import poptracker.composeapp.generated.resources.amazon
 import poptracker.composeapp.generated.resources.compose_multiplatform
 import poptracker.composeapp.generated.resources.icon_open_link
+import poptracker.composeapp.generated.resources.icon_pop_now
 import poptracker.composeapp.generated.resources.labubu_demo
 import poptracker.composeapp.generated.resources.lazada
 import poptracker.composeapp.generated.resources.popmart
@@ -96,7 +89,9 @@ data class ProductLinkCardConfig(
  * @param config Configuration for card appearance and image settings
  * @param officialLink Optional URL for the official POP MART link. When null, the official link section is hidden
  * @param officialLinkAvailability Availability status for the official link (default: InStock)
+ * @param hasPopNow Whether the product has Pop Now functionality (shows Pop Now button)
  * @param onOfficialLinkClick Callback invoked when the official link button is clicked
+ * @param onPopNowClick Callback invoked when the Pop Now button is clicked
  */
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -107,7 +102,9 @@ fun ProductLinkCard(
     config: ProductLinkCardConfig = ProductLinkCardConfig(),
     officialLink: String? = null,
     officialLinkAvailability: AvailabilityStatus = AvailabilityStatus.InStock,
-    onOfficialLinkClick: ((String) -> Unit)? = null
+    hasPopNow: Boolean = false,
+    onOfficialLinkClick: ((String) -> Unit)? = null,
+    onPopNowClick: ((String) -> Unit)? = null
 ) {
     val firstLink = links.firstOrNull()
     
@@ -180,10 +177,14 @@ fun ProductLinkCard(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
-                    OfficialPopmartButton(
-                        onClick = {
+                    OfficialLinkRowComponent(
+                        hasPopNow = hasPopNow,
+                        onViewClick = {
                             onOfficialLinkClick?.invoke(officialLink)
-                        }
+                        },
+                        onPopNowClick = if (onPopNowClick != null) {
+                            { onPopNowClick.invoke(officialLink) }
+                        } else null
                     )
                 }
             }
@@ -213,51 +214,136 @@ fun ProductLinkCard(
 }
 
 
+/**
+ * Base component for link rows that displays website info with action buttons on the right
+ */
 @Composable
-private fun OfficialPopmartButton(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit = {}
+private fun LinkRowComponent(
+    websiteIcon: Painter,
+    websiteName: String,
+    isOfficial: Boolean = false,
+    actionButtons: @Composable () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    Button(
-        onClick = onClick,
+    val containerColor = if (isOfficial) {
+        MaterialTheme.colorScheme.primary
+    } else {
+        Color.Transparent
+    }
+    
+    val borderColor = if (isOfficial) {
+        Color.Transparent
+    } else {
+        MaterialTheme.colorScheme.outline
+    }
+    
+    Card(
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp)
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = containerColor),
+        border = BorderStroke(
+            width = if (isOfficial) 0.dp else 1.dp,
+            color = borderColor
+        )
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Left side: Website info
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Box(
                     modifier = Modifier
-                        .size(24.dp)
+                        .size(32.dp)
                         .background(
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            shape = RoundedCornerShape(12.dp)
+                            color = if (isOfficial) {
+                                MaterialTheme.colorScheme.onPrimary
+                            } else {
+                                MaterialTheme.colorScheme.surface
+                            },
+                            shape = RoundedCornerShape(16.dp)
                         ),
                     contentAlignment = Alignment.Center
                 ) {
                     Image(
-                        painter = painterResource(Res.drawable.popmart),
-                        contentDescription = "POP MART",
-                        modifier = Modifier.size(16.dp),
+                        painter = websiteIcon,
+                        contentDescription = websiteName,
+                        modifier = Modifier.size(20.dp),
                         contentScale = ContentScale.Fit
                     )
                 }
-                Text(text = "POP MART")
+                Text(
+                    text = websiteName,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = if (isOfficial) {
+                        MaterialTheme.colorScheme.onPrimary
+                    } else {
+                        MaterialTheme.colorScheme.onSurface
+                    }
+                )
             }
             
-            Icon(
-                painter = painterResource(Res.drawable.icon_open_link),
-                contentDescription = "Open link",
-                modifier = Modifier.size(18.dp)
-            )
+            // Right side: Action buttons
+            actionButtons()
         }
     }
+}
+
+/**
+ * Official link row component with dynamic action buttons based on product type
+ */
+@Composable
+private fun OfficialLinkRowComponent(
+    modifier: Modifier = Modifier,
+    hasPopNow: Boolean = false,
+    onViewClick: () -> Unit = {},
+    onPopNowClick: (() -> Unit)? = null
+) {
+    LinkRowComponent(
+        websiteIcon = painterResource(Res.drawable.popmart),
+        websiteName = "POP MART",
+        isOfficial = true,
+        actionButtons = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Pop Now button (conditional)
+                if (hasPopNow && onPopNowClick != null) {
+                    IconButton(
+                        onClick = onPopNowClick,
+                        modifier = Modifier.size(36.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(Res.drawable.icon_pop_now),
+                            contentDescription = "Pop Now",
+                            modifier = Modifier.size(18.dp),
+                            tint = Color.Unspecified
+                        )
+                    }
+                }
+                
+                // Open link icon (always present on the right)
+                IconButton(
+                    onClick = onViewClick,
+                    modifier = Modifier.size(36.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(Res.drawable.icon_open_link),
+                        contentDescription = "Open link",
+                        modifier = Modifier.size(18.dp),
+                        tint = MaterialTheme.colorScheme.onPrimary
+                    )
+                }
+            }
+        },
+        modifier = modifier
+    )
 }
 
 @Composable
@@ -266,46 +352,25 @@ private fun MarketplaceLinkButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
-    OutlinedButton(
-        onClick = onClick,
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+    LinkRowComponent(
+        websiteIcon = link.websiteIcon,
+        websiteName = link.websiteName,
+        isOfficial = false,
+        actionButtons = {
+            IconButton(
+                onClick = onClick,
+                modifier = Modifier.size(36.dp)
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .background(
-                            color = MaterialTheme.colorScheme.surface,
-                            shape = RoundedCornerShape(12.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Image(
-                        painter = link.websiteIcon,
-                        contentDescription = link.websiteName,
-                        modifier = Modifier.size(16.dp),
-                        contentScale = ContentScale.Fit
-                    )
-                }
-                Text(text = link.websiteName)
+                Icon(
+                    painter = painterResource(Res.drawable.icon_open_link),
+                    contentDescription = "Open link",
+                    modifier = Modifier.size(18.dp),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
-            
-            Icon(
-                painter = painterResource(Res.drawable.icon_open_link),
-                contentDescription = "Open link",
-                modifier = Modifier.size(18.dp)
-            )
-        }
-    }
+        },
+        modifier = modifier
+    )
 }
 
 // Preview Section
@@ -366,8 +431,12 @@ fun ProductLinkCardPreview() {
             links = sampleLinks,
             officialLink = "https://www.popmart.com/us/products/labubu-halloween",
             officialLinkAvailability = AvailabilityStatus.InStock,
+            hasPopNow = true,
             onOfficialLinkClick = { url -> 
-                // Handle link click
+                // Handle main link click
+            },
+            onPopNowClick = { url ->
+                // Handle pop now click
             }
         )
     }
@@ -377,42 +446,59 @@ fun ProductLinkCardPreview() {
 @Composable
 fun ProductLinkCardVariationsPreview() {
     PopTrackerTheme {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        Column(
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Out of stock variant
+            // Default with just icon button
             ProductLinkCard(
                 productImage = painterResource(Res.drawable.labubu_demo),
                 links = listOf(
                     ProductLink(
-                        title = "Sold Out Item",
-                        subtitle = "Currently Unavailable",
+                        title = "Regular Item",
+                        subtitle = "Standard Product",
                         websiteName = "Store",
                         websiteIcon = painterResource(Res.drawable.compose_multiplatform),
                         websiteDomain = WebsiteDomain.Popmart,
                         price = "25.99",
-                        availability = AvailabilityStatus.OutOfStock
+                        availability = AvailabilityStatus.InStock
                     )
-                )
+                ),
+                officialLink = "https://www.popmart.com/regular"
             )
 
-            // Coming soon variant
+            // Regular product
             ProductLinkCard(
                 productImage = painterResource(Res.drawable.labubu_demo),
                 links = listOf(
                     ProductLink(
-                        title = "New Release",
-                        subtitle = "Pre-order Available",
+                        title = "Mystery Box",
+                        subtitle = "Blind Box Collection",
                         websiteName = "Official Store",
                         websiteIcon = painterResource(Res.drawable.compose_multiplatform),
                         websiteDomain = WebsiteDomain.Popmart,
                         price = "19.99",
-                        availability = AvailabilityStatus.ComingSoon
+                        availability = AvailabilityStatus.InStock
                     )
                 ),
-                config = ProductLinkCardConfig(
-                    overlayGradient = false
-                )
+                officialLink = "https://www.popmart.com/blindbox"
+            )
+
+            // Pop Now only
+            ProductLinkCard(
+                productImage = painterResource(Res.drawable.labubu_demo),
+                links = listOf(
+                    ProductLink(
+                        title = "Limited Edition",
+                        subtitle = "Pop Now Available",
+                        websiteName = "Official Store",
+                        websiteIcon = painterResource(Res.drawable.compose_multiplatform),
+                        websiteDomain = WebsiteDomain.Popmart,
+                        price = "29.99",
+                        availability = AvailabilityStatus.Limited
+                    )
+                ),
+                officialLink = "https://www.popmart.com/popnow",
+                hasPopNow = true
             )
         }
     }
