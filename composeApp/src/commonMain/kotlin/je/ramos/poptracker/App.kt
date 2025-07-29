@@ -10,7 +10,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import je.ramos.poptracker.everyui.theme.ExtendedTheme
+import je.ramos.poptracker.ui.theme.PopTrackerTheme
 import je.ramos.poptracker.navigation.Screen
 import je.ramos.poptracker.navigation.bottomNavItems
 import je.ramos.poptracker.ui.screens.CollectionScreen
@@ -22,8 +22,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 @Preview
 fun App() {
-    MaterialTheme {
-        ExtendedTheme {
+        PopTrackerTheme {
             var selectedScreen by remember { mutableStateOf(Screen.Explore.route) }
             
             Scaffold(
@@ -42,11 +41,10 @@ fun App() {
                 }
             ) { paddingValues ->
                 when (selectedScreen) {
-                    Screen.Explore.route -> ExploreScreen()
+                    Screen.Explore.route -> ExploreScreen(modifier = Modifier.padding(paddingValues))
                     Screen.Collection.route -> CollectionScreen()
                     Screen.Profile.route -> ProfileScreen()
                 }
             }
         }
-    }
 }

@@ -14,12 +14,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Badge
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
@@ -33,19 +38,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import je.ramos.poptracker.everyui.components.EveryImage
-import je.ramos.poptracker.everyui.components.EveryImageConfig
-import je.ramos.poptracker.everyui.components.ImageSource
-import je.ramos.poptracker.everyui.theme.AspectRatioToken
-import je.ramos.poptracker.everyui.theme.ExtendedTheme
-import je.ramos.poptracker.everyui.theme.PaddingToken
-import je.ramos.poptracker.everyui.theme.ShapeToken
-import je.ramos.poptracker.everyui.theme.extendedShapes
+import je.ramos.poptracker.ui.theme.PopTrackerTheme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import poptracker.composeapp.generated.resources.Res
 import poptracker.composeapp.generated.resources.amazon
 import poptracker.composeapp.generated.resources.compose_multiplatform
+import poptracker.composeapp.generated.resources.icon_open_link
 import poptracker.composeapp.generated.resources.labubu_demo
 import poptracker.composeapp.generated.resources.lazada
 import poptracker.composeapp.generated.resources.popmart
@@ -64,12 +63,12 @@ data class ProductLink(
     val availability: AvailabilityStatus = AvailabilityStatus.InStock
 )
 
-enum class WebsiteDomain(val backgroundColor: Color) {
-    Amazon(Color.Yellow.copy(alpha = 0.1f)),
-    Popmart(Color.Red),
-    Tiktok(Color.White),
-    Shopee(Color.Red.copy(alpha=0.1f)),
-    Lazada(Color.Blue.copy(alpha = 0.3f))
+enum class WebsiteDomain {
+    Amazon,
+    Popmart,
+    Tiktok,
+    Shopee,
+    Lazada
 }
 
 enum class AvailabilityStatus(val label: String, val color: Color) {
@@ -81,161 +80,230 @@ enum class AvailabilityStatus(val label: String, val color: Color) {
 
 @Immutable
 data class ProductLinkCardConfig(
-    val imageConfig: EveryImageConfig = EveryImageConfig(
-        aspectRatio = AspectRatioToken.Square,
-        shape = ShapeToken.Large
-    ),
     val cardElevation: androidx.compose.ui.unit.Dp = 8.dp,
     val overlayGradient: Boolean = true
 )
 
 /**
- * Product card with immersive image and overlay content.
+ * Product card with horizontal layout and organized link buttons.
  *
- * Features an immersive square image with title/subtitle overlay,
- * availability badge, and website links with prices and external link indicators.
+ * Features a horizontal layout with product image on the left, product info on the right,
+ * followed by official link buttons and marketplace link buttons.
  *
- * @param productImage Image source for the main product image
+ * @param productImage Painter for the main product image
  * @param links List of website links with prices for this product
  * @param modifier Modifier for the card
  * @param config Configuration for card appearance and image settings
+ * @param officialLink Optional URL for the official POP MART link. When null, the official link section is hidden
+ * @param officialLinkAvailability Availability status for the official link (default: InStock)
+ * @param onOfficialLinkClick Callback invoked when the official link button is clicked
  */
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun ProductLinkCard(
-    productImage: ImageSource,
+    productImage: Painter,
     links: List<ProductLink>,
     modifier: Modifier = Modifier,
-    config: ProductLinkCardConfig = ProductLinkCardConfig()
+    config: ProductLinkCardConfig = ProductLinkCardConfig(),
+    officialLink: String? = null,
+    officialLinkAvailability: AvailabilityStatus = AvailabilityStatus.InStock,
+    onOfficialLinkClick: ((String) -> Unit)? = null
 ) {
+    val firstLink = links.firstOrNull()
+    
     Card(
-        modifier = modifier.width(200.dp),
+        modifier = modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = config.cardElevation),
         shape = RoundedCornerShape(16.dp)
     ) {
-        Column {
-            // Immersive top image with overlay
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            // Top section: Image on left, product info on right
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                EveryImage(
-                    source = productImage,
-                    contentDescription = links.firstOrNull()?.title,
-                    modifier = Modifier.fillMaxSize(),
-                    config = config.imageConfig.copy(
-                        aspectRatio = AspectRatioToken.Square,
-                        shape = ShapeToken.None,
-                        padding = PaddingToken.None
+                // Product image
+                Box(
+                    modifier = Modifier
+                        .size(80.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                ) {
+                    Image(
+                        painter = productImage,
+                        contentDescription = firstLink?.title,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
                     )
-                )
-                links.firstOrNull()?.let { firstLink ->
-                    Column(
-                        modifier = Modifier
-                            .align(Alignment.BottomEnd)
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(48.dp)
-                                .background(
-                                    Brush.verticalGradient(
-                                        colors = listOf(
-                                            Color.Transparent,
-                                            Color.Black.copy(alpha = 0.7f)
-                                        ),
-                                        startY = 0f,
-                                        endY = 200f
-                                    )
-                                ).padding(horizontal = 8.dp, vertical = 8.dp),
-                            contentAlignment = Alignment.BottomStart
-                        ) {
-                            Text(
-                                text = firstLink.title,
-                                style = MaterialTheme.typography.labelMedium,
-                                color = Color.White,
-                                fontWeight = FontWeight.Bold,
-                                maxLines = 2,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                        }
+                }
+                
+                // Product info
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    firstLink?.let { link ->
+                        Text(
+                            text = link.title,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Text(
+                            text = link.subtitle,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Text(
+                            text = "${link.currency}${link.price}",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
                     }
                 }
             }
+            
+            // Official links section
+            if (officialLink != null) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        text = "Official Link",
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    OfficialPopmartButton(
+                        onClick = {
+                            onOfficialLinkClick?.invoke(officialLink)
+                        }
+                    )
+                }
+            }
+            
+            // Marketplace links section
+            val marketplaceLinks = links.filter { 
+                it.websiteDomain in listOf(WebsiteDomain.Shopee, WebsiteDomain.Lazada, WebsiteDomain.Tiktok)
+            }
+            
+            if (marketplaceLinks.isNotEmpty()) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        text = "Available on Marketplaces",
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    marketplaceLinks.forEach { link ->
+                        MarketplaceLinkButton(link = link)
+                    }
+                }
+            }
+        }
+    }
+}
 
-            // Website links section
-            Column(
-                modifier = Modifier.padding(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+
+@Composable
+private fun OfficialPopmartButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
+) {
+    Button(
+        onClick = onClick,
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                links.forEach { link ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        // Website icon and name
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Box(
-                                modifier = Modifier.size(24.dp).clip(MaterialTheme.extendedShapes.small).background(link.websiteDomain.backgroundColor).padding(2.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Image(
-                                    painter = link.websiteIcon,
-                                    contentDescription = link.websiteName,
-                                    modifier = Modifier.fillMaxSize(),
-                                    contentScale = ContentScale.Fit
-                                )
-                            }
-//                            Box(
-//                                modifier = Modifier.size(24.dp).background(
-//                                    Color.LightGray.copy(alpha = 0.1f),
-//                                    shape = MaterialTheme.extendedShapes.large
-//                                ).padding(4.dp)
-//                            ) {
-//                                EveryImage(
-//                                    source = ImageSource.Drawable(link.websiteIcon),
-//                                    contentDescription = link.websiteName,
-//                                    config = EveryImageConfig(
-//                                        aspectRatio = AspectRatioToken.Square,
-//                                        shape = ShapeToken.None,
-//                                        backgroundColor = Color.Transparent,
-//                                        contentScale = ContentScale.Inside
-//                                    )
-//                                )
-//                            }
-                            Text(
-                                text = link.websiteName,
-                                style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                        }
-
-                        // Price and external link icon
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
-                        ) {
-                            Text(
-                                text = "${link.currency}${link.price}",
-                                style = MaterialTheme.typography.labelLarge,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                            Text(
-                                text = "↗",
-                                style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
+                Box(
+                    modifier = Modifier
+                        .size(24.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            shape = RoundedCornerShape(12.dp)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        painter = painterResource(Res.drawable.popmart),
+                        contentDescription = "POP MART",
+                        modifier = Modifier.size(16.dp),
+                        contentScale = ContentScale.Fit
+                    )
                 }
+                Text(text = "POP MART")
             }
+            
+            Icon(
+                painter = painterResource(Res.drawable.icon_open_link),
+                contentDescription = "Open link",
+                modifier = Modifier.size(18.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun MarketplaceLinkButton(
+    link: ProductLink,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
+) {
+    OutlinedButton(
+        onClick = onClick,
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(24.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.surface,
+                            shape = RoundedCornerShape(12.dp)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        painter = link.websiteIcon,
+                        contentDescription = link.websiteName,
+                        modifier = Modifier.size(16.dp),
+                        contentScale = ContentScale.Fit
+                    )
+                }
+                Text(text = link.websiteName)
+            }
+            
+            Icon(
+                painter = painterResource(Res.drawable.icon_open_link),
+                contentDescription = "Open link",
+                modifier = Modifier.size(18.dp)
+            )
         }
     }
 }
@@ -244,7 +312,7 @@ fun ProductLinkCard(
 @Preview
 @Composable
 fun ProductLinkCardPreview() {
-    ExtendedTheme {
+    PopTrackerTheme {
         val sampleLinks = listOf(
             ProductLink(
                 title = "Labubu Halloween Keychain",
@@ -294,8 +362,13 @@ fun ProductLinkCardPreview() {
         )
 
         ProductLinkCard(
-            productImage = ImageSource.Drawable(painterResource(Res.drawable.labubu_demo)),
-            links = sampleLinks
+            productImage = painterResource(Res.drawable.labubu_demo),
+            links = sampleLinks,
+            officialLink = "https://www.popmart.com/us/products/labubu-halloween",
+            officialLinkAvailability = AvailabilityStatus.InStock,
+            onOfficialLinkClick = { url -> 
+                // Handle link click
+            }
         )
     }
 }
@@ -303,13 +376,13 @@ fun ProductLinkCardPreview() {
 @Preview
 @Composable
 fun ProductLinkCardVariationsPreview() {
-    ExtendedTheme {
+    PopTrackerTheme {
         Row(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             // Out of stock variant
             ProductLinkCard(
-                productImage = ImageSource.Drawable(painterResource(Res.drawable.labubu_demo)),
+                productImage = painterResource(Res.drawable.labubu_demo),
                 links = listOf(
                     ProductLink(
                         title = "Sold Out Item",
@@ -325,7 +398,7 @@ fun ProductLinkCardVariationsPreview() {
 
             // Coming soon variant
             ProductLinkCard(
-                productImage = ImageSource.Drawable(painterResource(Res.drawable.labubu_demo)),
+                productImage = painterResource(Res.drawable.labubu_demo),
                 links = listOf(
                     ProductLink(
                         title = "New Release",
