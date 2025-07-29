@@ -64,7 +64,17 @@ fun ExploreScreen(modifier: Modifier = Modifier) {
             items(mockProducts) { product ->
                 ProductLinkCard(
                     productImage = product.productImage,
-                    links = product.links
+                    links = product.links,
+                    officialLink = "https://www.popmart.com/ph/products/1714/THE-MONSTERS---Have-a-Seat-Vinyl-Plush-Blind-Box",
+                    hasPopNow = true,
+                    onOfficialLinkClick = { url ->
+                        // Handle official link click - could open browser or internal web view
+                        println("Opening official link: $url")
+                    },
+                    onPopNowClick = { url ->
+                        // Handle Pop Now click - special action for immediate purchase
+                        println("Pop Now clicked for: $url")
+                    }
                 )
             }
         }
@@ -79,28 +89,40 @@ private fun createMockProducts(): List<ProductItem> {
             productImage = painterResource(Res.drawable.labubu_demo),
             links = listOf(
                 ProductLink(
-                    title = "Labubu Halloween Keychain",
-                    subtitle = "Limited Edition Collectible",
+                    title = "Have a Seat",
+                    subtitle = "THE MONSTER - Vinyl Plush Blind Box Labubu v2",
                     websiteName = "PopMart",
                     websiteIcon = painterResource(Res.drawable.popmart),
                     websiteDomain = WebsiteDomain.Popmart,
-                    price = "15.99"
+                    price = "900 - 5400",
+                    currency = "₱"
                 ),
                 ProductLink(
-                    title = "Labubu Halloween Keychain",
-                    subtitle = "Limited Edition Collectible",
-                    websiteName = "Amazon",
-                    websiteIcon = painterResource(Res.drawable.amazon),
-                    websiteDomain = WebsiteDomain.Amazon,
-                    price = "18.50"
-                ),
-                ProductLink(
-                    title = "Labubu Halloween Keychain",
-                    subtitle = "Limited Edition Collectible",
+                    title = "Have a Seat",
+                    subtitle = "THE MONSTER - Vinyl Plush Blind Box Labubu v2",
                     websiteName = "TikTok",
                     websiteIcon = painterResource(Res.drawable.tiktok),
                     websiteDomain = WebsiteDomain.Tiktok,
-                    price = "22.00"
+                    price = "900 - 5400",
+                    currency = "₱"
+                ),
+                ProductLink(
+                    title = "Have a Seat",
+                    subtitle = "THE MONSTER - Vinyl Plush Blind Box Labubu v2",
+                    websiteName = "Shopee",
+                    websiteIcon = painterResource(Res.drawable.shopee),
+                    websiteDomain = WebsiteDomain.Shopee,
+                    price = "900 - 5400",
+                    currency = "₱"
+                ),
+                ProductLink(
+                    title = "Have a Seat",
+                    subtitle = "THE MONSTER - Vinyl Plush Blind Box Labubu v2",
+                    websiteName = "Lazada",
+                    websiteIcon = painterResource(Res.drawable.lazada),
+                    websiteDomain = WebsiteDomain.Lazada,
+                    price = "900 - 5400",
+                    currency = "₱"
                 )
             )
         ),
