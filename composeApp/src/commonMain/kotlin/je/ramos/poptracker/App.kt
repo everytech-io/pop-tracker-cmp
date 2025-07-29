@@ -28,7 +28,10 @@ fun App() {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
                 bottomBar = {
-                    NavigationBar {
+                    NavigationBar(
+                        contentColor = MaterialTheme.colorScheme.onSurface,
+                        containerColor = MaterialTheme.colorScheme.surface
+                    ) {
                         bottomNavItems.forEach { screen ->
                             NavigationBarItem(
                                 icon = { Icon(painter = painterResource(screen.icon), contentDescription = screen.title) },
