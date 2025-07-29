@@ -1,20 +1,14 @@
 package je.ramos.poptracker.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.painter.Painter
+import je.ramos.poptracker.ui.components.StandardScreen
 import je.ramos.poptracker.ui.theme.components.AvailabilityStatus
 import je.ramos.poptracker.ui.theme.components.ProductLink
 import je.ramos.poptracker.ui.theme.components.ProductLinkCard
@@ -38,46 +32,33 @@ data class ProductItem(
 fun ExploreScreen(modifier: Modifier = Modifier) {
     val mockProducts = createMockProducts()
     
-    Column(
+    StandardScreen(
+        title = "Explore",
+        subtitle = "Discover new products",
         modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp)
     ) {
-        Text(
-            text = "Explore",
-            style = MaterialTheme.typography.headlineLarge,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        Text(
-            text = "Discover new products",
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
-        
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(1),
-            contentPadding = PaddingValues(vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            items(mockProducts) { product ->
-                ProductLinkCard(
-                    productImage = product.productImage,
-                    links = product.links,
-                    officialLink = "https://www.popmart.com/ph/products/1714/THE-MONSTERS---Have-a-Seat-Vinyl-Plush-Blind-Box",
-                    hasPopNow = true,
-                    onOfficialLinkClick = { url ->
-                        // Handle official link click - could open browser or internal web view
-                        println("Opening official link: $url")
-                    },
-                    onPopNowClick = { _ ->
-                        // Handle Pop Now click - special action for immediate purchase
-                        val popNowUrl = "https://www.popmart.com/ph/pop-now/set/24"
-                        println("Pop Now clicked, opening: $popNowUrl")
-                    }
-                )
-            }
+        items(
+            items = mockProducts,
+            key = { it.id }
+        ) { product ->
+            ProductLinkCard(
+                productImage = product.productImage,
+                links = product.links,
+                officialLink = "https://www.popmart.com/ph/products/1714/THE-MONSTERS---Have-a-Seat-Vinyl-Plush-Blind-Box",
+                hasPopNow = true,
+                onOfficialLinkClick = { url ->
+                    // Handle official link click - could open browser or internal web view
+                    println("Opening official link: $url")
+                },
+                onPopNowClick = { _ ->
+                    // Handle Pop Now click - special action for immediate purchase
+                    val popNowUrl = "https://www.popmart.com/ph/pop-now/set/24"
+                    println("Pop Now clicked, opening: $popNowUrl")
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
+            )
         }
     }
 }
