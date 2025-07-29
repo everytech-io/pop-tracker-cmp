@@ -71,9 +71,10 @@ fun ExploreScreen(modifier: Modifier = Modifier) {
                         // Handle official link click - could open browser or internal web view
                         println("Opening official link: $url")
                     },
-                    onPopNowClick = { url ->
+                    onPopNowClick = { _ ->
                         // Handle Pop Now click - special action for immediate purchase
-                        println("Pop Now clicked for: $url")
+                        val popNowUrl = "https://www.popmart.com/ph/pop-now/set/24"
+                        println("Pop Now clicked, opening: $popNowUrl")
                     }
                 )
             }
