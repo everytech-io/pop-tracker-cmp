@@ -7,6 +7,13 @@ set -e
 
 echo "🚀 Starting KMP Xcode Cloud setup..."
 
+# Debug environment
+echo "🔍 Environment info:"
+echo "   PWD: $(pwd)"
+echo "   CI_WORKSPACE: ${CI_WORKSPACE:-'not set'}"
+echo "   HOME: $HOME"
+echo "   Available space: $(df -h . | tail -1)"
+
 # JDK Version
 JDK_VERSION="20.0.1"
 JDK_URL="https://download.oracle.com/java/20/archive/jdk-${JDK_VERSION}_macos-x64_bin.tar.gz"
@@ -25,16 +32,29 @@ else
     echo "💻 Using x64 JDK for Intel"
 fi
 
-# Set paths
-JDK_DIR="$CI_WORKSPACE/DerivedData/JDK"
+# Set paths - Use HOME directory which is writable in Xcode Cloud
+JDK_DIR="$HOME/DerivedData/JDK"
 JAVA_HOME="$JDK_DIR/Home"
-GRADLE_CACHE_DIR="$CI_WORKSPACE/DerivedData/GradleCache"
+GRADLE_CACHE_DIR="$HOME/DerivedData/GradleCache"
 
 echo "📁 JDK will be installed at: $JAVA_HOME"
+echo "📁 Gradle cache at: $GRADLE_CACHE_DIR"
 
-# Create directories
-mkdir -p "$JDK_DIR"
-mkdir -p "$GRADLE_CACHE_DIR"
+# Create directories with error handling
+echo "📁 Creating directories..."
+if mkdir -p "$JDK_DIR"; then
+    echo "✅ Created JDK directory"
+else
+    echo "❌ Failed to create JDK directory: $JDK_DIR"
+    exit 1
+fi
+
+if mkdir -p "$GRADLE_CACHE_DIR"; then
+    echo "✅ Created Gradle cache directory"
+else
+    echo "❌ Failed to create Gradle cache directory: $GRADLE_CACHE_DIR"
+    exit 1
+fi
 
 # Download and install JDK if not already present
 if [ ! -d "$JAVA_HOME" ]; then
