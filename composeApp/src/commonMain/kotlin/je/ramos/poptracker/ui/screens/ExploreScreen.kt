@@ -34,7 +34,6 @@ fun ExploreScreen(modifier: Modifier = Modifier) {
     
     StandardScreen(
         title = "Explore",
-        subtitle = "Discover new products",
         modifier = modifier
     ) {
         items(
