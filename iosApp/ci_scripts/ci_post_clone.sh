@@ -1,104 +1,96 @@
 #!/bin/sh
 
-# Xcode Cloud script for Kotlin Multiplatform setup
-# This script runs after the repository is cloned
+# Xcode Cloud post-clone script for KMP setup
+root_dir=$CI_WORKSPACE_PATH
+repo_dir=$CI_PRIMARY_REPOSITORY_PATH
+jdk_dir="${CI_DERIVED_DATA_PATH}/JDK"
+gradle_dir="${repo_dir}"
+cache_dir="${CI_DERIVED_DATA_PATH}/.gradle"
+jdk_version="20.0.1"
 
-set -e
-
-echo "🚀 Starting KMP Xcode Cloud setup..."
-
-# Debug environment
-echo "🔍 Environment info:"
-echo "   PWD: $(pwd)"
-echo "   CI_WORKSPACE: ${CI_WORKSPACE:-'not set'}"
-echo "   HOME: $HOME"
-echo "   Available space: $(df -h . | tail -1)"
-
-# JDK Version
-JDK_VERSION="20.0.1"
-JDK_URL="https://download.oracle.com/java/20/archive/jdk-${JDK_VERSION}_macos-x64_bin.tar.gz"
-JDK_ARM64_URL="https://download.oracle.com/java/20/archive/jdk-${JDK_VERSION}_macos-aarch64_bin.tar.gz"
-
-# Detect architecture
-ARCH=$(uname -m)
-echo "📱 Detected architecture: $ARCH"
-
-# Set JDK URL based on architecture
-if [ "$ARCH" = "arm64" ]; then
-    DOWNLOAD_URL=$JDK_ARM64_URL
-    echo "🍎 Using ARM64 JDK for Apple Silicon"
-else
-    DOWNLOAD_URL=$JDK_URL
-    echo "💻 Using x64 JDK for Intel"
-fi
-
-# Set paths - Use HOME directory which is writable in Xcode Cloud
-JDK_DIR="$HOME/DerivedData/JDK"
-JAVA_HOME="$JDK_DIR/Home"
-GRADLE_CACHE_DIR="$HOME/DerivedData/GradleCache"
-
-echo "📁 JDK will be installed at: $JAVA_HOME"
-echo "📁 Gradle cache at: $GRADLE_CACHE_DIR"
-
-# Create directories with error handling
-echo "📁 Creating directories..."
-if mkdir -p "$JDK_DIR"; then
-    echo "✅ Created JDK directory"
-else
-    echo "❌ Failed to create JDK directory: $JDK_DIR"
-    exit 1
-fi
-
-if mkdir -p "$GRADLE_CACHE_DIR"; then
-    echo "✅ Created Gradle cache directory"
-else
-    echo "❌ Failed to create Gradle cache directory: $GRADLE_CACHE_DIR"
-    exit 1
-fi
-
-# Download and install JDK if not already present
-if [ ! -d "$JAVA_HOME" ]; then
-    echo "⬇️  Downloading JDK $JDK_VERSION..."
-    curl -o "$JDK_DIR/jdk.tar.gz" "$DOWNLOAD_URL"
+# Check if we stored gradle caches in DerivedData.
+recover_cache_files() {
+    echo "\nRecover cache files"
     
-    echo "📦 Extracting JDK..."
-    cd "$JDK_DIR"
-    tar -xzf jdk.tar.gz
-    
-    # Find the extracted JDK directory and rename it to "Home"
-    JDK_EXTRACTED=$(find . -name "jdk-*" -type d | head -n 1)
-    if [ -n "$JDK_EXTRACTED" ]; then
-        mv "$JDK_EXTRACTED" Home
-        echo "✅ JDK installed successfully"
-    else
-        echo "❌ Failed to find extracted JDK directory"
-        exit 1
+    if [ ! -d $cache_dir ]; then
+        echo " - No valid caches found, skipping"
+        return 0
     fi
     
-    # Clean up
-    rm jdk.tar.gz
-else
-    echo "✅ JDK already installed"
-fi
+    echo " - Copying gradle cache to ${gradle_dir}"
+    rm -rf "${gradle_dir}/.gradle"
+    cp -r $cache_dir $gradle_dir
+    
+    return 0
+}
 
-# Set environment variables
-export JAVA_HOME="$JAVA_HOME"
-export PATH="$JAVA_HOME/bin:$PATH"
-export GRADLE_USER_HOME="$GRADLE_CACHE_DIR"
+# Install the JDK
+install_jdk_if_needed() {
+    echo "\nInstall JDK if needed"
+    
+    if [[ $(uname -m) == "arm64" ]]; then
+        echo " - Detected M1"
+        arch_type="macos-aarch64"
+    else
+        echo " - Detected Intel"
+        arch_type="macos-x64"
+    fi
+    
+    # Location of version / arch detection file.
+    detect_loc="${jdk_dir}/.${jdk_version}.${arch_type}"
+    
+    if [ -f $detect_loc ]; then
+        echo " - Found a valid JDK installation, skipping install"
+        return 0
+    fi
+    
+    echo " - No valid JDK installation found, installing..."
+    
+    tar_name="jdk-${jdk_version}_${arch_type}_bin.tar.gz"
+    
+    # Download and un-tar JDK to our defined location.
+    curl -OL "https://download.oracle.com/java/20/archive/${tar_name}"
+    tar xzf $tar_name -C $root_dir
+    
+    # Move the JDK to our desired location.
+    rm -rf $jdk_dir
+    mkdir -p $jdk_dir
+    mv "${root_dir}/jdk-${jdk_version}.jdk/Contents/Home" $jdk_dir
+    
+    # Some cleanup.
+    rm -r "${root_dir}/jdk-${jdk_version}.jdk"
+    rm $tar_name
+    
+    # Add the detection file for subsequent builds.
+    touch $detect_loc
+    
+    echo " - Set JAVA_HOME in Xcode Cloud to ${jdk_dir}/Home"
+    
+    return 0
+}
 
-echo "🔧 Environment setup:"
-echo "   JAVA_HOME: $JAVA_HOME"
-echo "   GRADLE_USER_HOME: $GRADLE_USER_HOME"
+# Execute the functions
+recover_cache_files
+install_jdk_if_needed
 
-# Verify Java installation
-java -version
-javac -version
-
-echo "🎯 Making gradlew executable..."
+# Make gradlew executable for KMP build
+echo "\nPreparing KMP build..."
 chmod +x ../gradlew
 
-echo "🏗️  Pre-building KMP shared framework..."
-cd ..
-./gradlew :composeApp:embedAndSignAppleFrameworkForXcode
+# Output important information
+echo "\n========================================="
+echo "IMPORTANT: Add this environment variable in Xcode Cloud:"
+echo "JAVA_HOME=${jdk_dir}/Home"
+echo "========================================="
 
-echo "✅ KMP Xcode Cloud setup completed successfully!"
+# If JAVA_HOME is set, try to build the KMP framework
+if [ -n "$JAVA_HOME" ]; then
+    echo "\nBuilding KMP framework..."
+    cd ..
+    ./gradlew :composeApp:embedAndSignAppleFrameworkForXcode
+else
+    echo "\nSkipping KMP build - JAVA_HOME not set in environment"
+    echo "After setting JAVA_HOME in Xcode Cloud, the build will proceed automatically"
+fi
+
+echo "\nSetup completed!"
