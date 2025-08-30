@@ -1,12 +1,12 @@
 package je.ramos.poptracker.ui.theme
 
 import AppTypography
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
-import androidx.compose.ui.graphics.Color
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -83,6 +83,7 @@ private val darkScheme = darkColorScheme(
     surfaceContainerHigh = surfaceContainerHighDark,
     surfaceContainerHighest = surfaceContainerHighestDark,
 )
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun PopTrackerTheme(
     content: @Composable() () -> Unit
@@ -90,7 +91,7 @@ fun PopTrackerTheme(
     // Always use light scheme regardless of system settings
     val colorScheme = lightScheme
 
-    MaterialTheme(
+    MaterialExpressiveTheme(
         colorScheme = colorScheme,
         typography = AppTypography,
         content = content
