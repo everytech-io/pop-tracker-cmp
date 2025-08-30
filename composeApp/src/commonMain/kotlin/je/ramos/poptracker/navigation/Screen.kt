@@ -12,13 +12,9 @@ sealed class Screen(
     val icon: DrawableResource,
     val title: String
 ) {
-    object Explore : Screen(route = "explore", icon = Res.drawable.icon_explore, title = "Explore")
-    object Collection : Screen("collection", Res.drawable.icon_collection, "Collection")
-    object Profile : Screen("profile", Res.drawable.icon_profile, "Profile")
+    object Tracker : Screen(route = "tracker", icon = Res.drawable.compose_multiplatform, title = "Link Tracker")
 }
 
 val bottomNavItems = listOf(
-    Screen.Explore,
-    Screen.Collection,
-    Screen.Profile
+    Screen.Tracker
 )

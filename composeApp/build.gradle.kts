@@ -45,8 +45,13 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-            implementation(libs.androidx.lifecycle.viewmodel)
-            implementation(libs.androidx.lifecycle.runtimeCompose)
+
+//            implementation(libs.androidx.lifecycle.runtime.compose)
+//            implementation(libs.androidx.lifecycle.viewmodel.compose)
+//            implementation(libs.androidx.navigation.compose)
+            implementation("org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose:2.9.2")
+// ViewModel utilities for Compose
+            implementation("org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.9.2")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

@@ -94,7 +94,11 @@ fun EveryIconButton(
                         painter = painter,
                         contentDescription = config.tooltipText,
                         modifier = Modifier.size(config.actualIconSize),
-                        colorFilter = config.iconTint?.let { ColorFilter.tint(it) }
+                        colorFilter = when {
+                            !config.enabled -> ColorFilter.tint(Color.Gray)
+                            config.iconTint != null -> ColorFilter.tint(config.iconTint)
+                            else -> null
+                        }
                     )
                 }
             }
@@ -112,7 +116,11 @@ fun EveryIconButton(
                         painter = painter,
                         contentDescription = config.tooltipText,
                         modifier = Modifier.size(config.actualIconSize),
-                        colorFilter = config.iconTint?.let { ColorFilter.tint(it) }
+                        colorFilter = when {
+                            !config.enabled -> ColorFilter.tint(Color.Gray)
+                            config.iconTint != null -> ColorFilter.tint(config.iconTint)
+                            else -> null
+                        }
                     )
                 }
             }
@@ -122,7 +130,7 @@ fun EveryIconButton(
                     modifier = modifier.size(config.actualContainerSize),
                     enabled = config.enabled,
                     colors = IconButtonDefaults.filledTonalIconButtonColors(
-                        containerColor = config.containerColor ?: MaterialTheme.colorScheme.secondaryContainer,
+                        containerColor = config.containerColor ?: MaterialTheme.colorScheme.primaryContainer,
                         contentColor = config.contentColor ?: MaterialTheme.colorScheme.onSecondaryContainer
                     )
                 ) {
@@ -130,7 +138,11 @@ fun EveryIconButton(
                         painter = painter,
                         contentDescription = config.tooltipText,
                         modifier = Modifier.size(config.actualIconSize),
-                        colorFilter = config.iconTint?.let { ColorFilter.tint(it) }
+                        colorFilter = when {
+                            !config.enabled -> ColorFilter.tint(Color.Gray)
+                            config.iconTint != null -> ColorFilter.tint(config.iconTint)
+                            else -> null
+                        }
                     )
                 }
             }
@@ -147,7 +159,11 @@ fun EveryIconButton(
                         painter = painter,
                         contentDescription = config.tooltipText,
                         modifier = Modifier.size(config.actualIconSize),
-                        colorFilter = config.iconTint?.let { ColorFilter.tint(it) }
+                        colorFilter = when {
+                            !config.enabled -> ColorFilter.tint(Color.Gray)
+                            config.iconTint != null -> ColorFilter.tint(config.iconTint)
+                            else -> null
+                        }
                     )
                 }
             }
@@ -465,6 +481,261 @@ fun EveryIconButtonStylesPreview() {
                             )
                         )
                         Text("Green", style = MaterialTheme.typography.labelSmall)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun EveryIconButtonDisabledStatesPreview() {
+    PopTrackerTheme {
+        Surface(
+            modifier = Modifier.padding(16.dp),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(24.dp)
+            ) {
+                Text(
+                    text = "Disabled Button States",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
+                
+                Text(
+                    text = "Enabled vs Disabled",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold
+                )
+                
+                // Show enabled vs disabled for each style
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    // Standard
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(24.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Standard:",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.weight(0.3f)
+                        )
+                        
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            EveryIconButton(
+                                painter = painterResource(Res.drawable.icon_open_link),
+                                onClick = { },
+                                config = EveryIconButtonConfig(
+                                    style = EveryIconButtonStyle.Standard,
+                                    enabled = true,
+                                    tooltipText = "Enabled Standard"
+                                )
+                            )
+                            Text("Enabled", style = MaterialTheme.typography.labelSmall)
+                        }
+                        
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            EveryIconButton(
+                                painter = painterResource(Res.drawable.icon_open_link),
+                                onClick = { },
+                                config = EveryIconButtonConfig(
+                                    style = EveryIconButtonStyle.Standard,
+                                    enabled = false,
+                                    tooltipText = "Disabled Standard"
+                                )
+                            )
+                            Text("Disabled", style = MaterialTheme.typography.labelSmall, color = Color.Gray)
+                        }
+                    }
+                    
+                    // Filled
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(24.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Filled:",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.weight(0.3f)
+                        )
+                        
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            EveryIconButton(
+                                painter = painterResource(Res.drawable.icon_open_link),
+                                onClick = { },
+                                config = EveryIconButtonConfig(
+                                    style = EveryIconButtonStyle.Filled,
+                                    enabled = true,
+                                    tooltipText = "Enabled Filled"
+                                )
+                            )
+                            Text("Enabled", style = MaterialTheme.typography.labelSmall)
+                        }
+                        
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            EveryIconButton(
+                                painter = painterResource(Res.drawable.icon_open_link),
+                                onClick = { },
+                                config = EveryIconButtonConfig(
+                                    style = EveryIconButtonStyle.Filled,
+                                    enabled = false,
+                                    tooltipText = "Disabled Filled"
+                                )
+                            )
+                            Text("Disabled", style = MaterialTheme.typography.labelSmall, color = Color.Gray)
+                        }
+                    }
+                    
+                    // FilledTonal
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(24.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Filled Tonal:",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.weight(0.3f)
+                        )
+                        
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            EveryIconButton(
+                                painter = painterResource(Res.drawable.icon_open_link),
+                                onClick = { },
+                                config = EveryIconButtonConfig(
+                                    style = EveryIconButtonStyle.FilledTonal,
+                                    enabled = true,
+                                    tooltipText = "Enabled Filled Tonal"
+                                )
+                            )
+                            Text("Enabled", style = MaterialTheme.typography.labelSmall)
+                        }
+                        
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            EveryIconButton(
+                                painter = painterResource(Res.drawable.icon_open_link),
+                                onClick = { },
+                                config = EveryIconButtonConfig(
+                                    style = EveryIconButtonStyle.FilledTonal,
+                                    enabled = false,
+                                    tooltipText = "Disabled Filled Tonal"
+                                )
+                            )
+                            Text("Disabled", style = MaterialTheme.typography.labelSmall, color = Color.Gray)
+                        }
+                    }
+                    
+                    // Outlined
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(24.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Outlined:",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.weight(0.3f)
+                        )
+                        
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            EveryIconButton(
+                                painter = painterResource(Res.drawable.icon_open_link),
+                                onClick = { },
+                                config = EveryIconButtonConfig(
+                                    style = EveryIconButtonStyle.Outlined,
+                                    enabled = true,
+                                    tooltipText = "Enabled Outlined"
+                                )
+                            )
+                            Text("Enabled", style = MaterialTheme.typography.labelSmall)
+                        }
+                        
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            EveryIconButton(
+                                painter = painterResource(Res.drawable.icon_open_link),
+                                onClick = { },
+                                config = EveryIconButtonConfig(
+                                    style = EveryIconButtonStyle.Outlined,
+                                    enabled = false,
+                                    tooltipText = "Disabled Outlined"
+                                )
+                            )
+                            Text("Disabled", style = MaterialTheme.typography.labelSmall, color = Color.Gray)
+                        }
+                    }
+                }
+                
+                Text(
+                    text = "Custom Tinted Icons (Disabled state overrides custom tint)",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(24.dp)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        EveryIconButton(
+                            painter = painterResource(Res.drawable.popmart),
+                            onClick = { },
+                            config = EveryIconButtonConfig(
+                                style = EveryIconButtonStyle.Standard,
+                                iconTint = MaterialTheme.colorScheme.primary,
+                                enabled = true
+                            )
+                        )
+                        Text("Primary Tint", style = MaterialTheme.typography.labelSmall)
+                    }
+                    
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        EveryIconButton(
+                            painter = painterResource(Res.drawable.popmart),
+                            onClick = { },
+                            config = EveryIconButtonConfig(
+                                style = EveryIconButtonStyle.Standard,
+                                iconTint = MaterialTheme.colorScheme.primary,
+                                enabled = false
+                            )
+                        )
+                        Text("Disabled (Gray)", style = MaterialTheme.typography.labelSmall, color = Color.Gray)
                     }
                 }
             }

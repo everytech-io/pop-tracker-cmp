@@ -2,13 +2,14 @@ package je.ramos.poptracker.ui.components.product
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.painter.Painter
+import org.jetbrains.compose.resources.DrawableResource
 
 @Immutable
 data class Product(
     val id: String,
     val title: String,
     val subtitle: String,
-    val image: Painter,
+    val imageDrawableResource: DrawableResource,
     val price: ProductPrice,
     val marketplaces: List<MarketplaceLink> = emptyList()
 )
@@ -22,17 +23,12 @@ data class ProductPrice(
 
 @Immutable
 data class MarketplaceLink(
-    val marketplace: Marketplace,
+    val name: String,
+    val iconDrawableResource: DrawableResource,
+    val type: MarketplaceType,
     val url: String,
     val price: ProductPrice? = null,
     val availability: AvailabilityStatus = AvailabilityStatus.InStock
-)
-
-@Immutable
-data class Marketplace(
-    val name: String,
-    val icon: Painter,
-    val type: MarketplaceType
 )
 
 enum class MarketplaceType {

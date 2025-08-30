@@ -18,6 +18,7 @@ import je.ramos.poptracker.ui.components.everyapp.EveryIconButtonConfig
 import je.ramos.poptracker.ui.components.everyapp.EveryIconButtonSize
 import je.ramos.poptracker.ui.components.everyapp.EveryIconButtonStyle
 import androidx.compose.foundation.Image
+import org.jetbrains.compose.resources.painterResource
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -35,8 +36,8 @@ fun PrimaryMarketplaceButton(
         contentPadding = ButtonDefaults.contentPaddingFor(size)
     ) {
         Image(
-            painter = marketplace.marketplace.icon,
-            contentDescription = marketplace.marketplace.name,
+            painter = painterResource(marketplace.iconDrawableResource),
+            contentDescription = marketplace.name,
             modifier = Modifier.width(64.dp)
         )
     }
@@ -50,17 +51,21 @@ fun MarketplaceButtonRow(
 ) {
     FlowRow(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center,
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+        horizontalArrangement = Arrangement.spacedBy(
+            space = 4.dp,
+            alignment = Alignment.CenterHorizontally
+        ),
+        verticalArrangement = Arrangement.spacedBy(space = 4.dp)
     ) {
         marketplaces.forEach { link ->
             EveryIconButton(
-                painter = link.marketplace.icon,
+                painter = painterResource(link.iconDrawableResource),
                 onClick = { onMarketplaceClick(link) },
                 config = EveryIconButtonConfig(
                     style = EveryIconButtonStyle.FilledTonal,
-                    size = EveryIconButtonSize.Medium,
-                    tooltipText = link.marketplace.name
+                    enabled = link.availability == AvailabilityStatus.InStock,
+                    size = EveryIconButtonSize.ExtraSmall,
+                    tooltipText = link.name
                 )
             )
         }

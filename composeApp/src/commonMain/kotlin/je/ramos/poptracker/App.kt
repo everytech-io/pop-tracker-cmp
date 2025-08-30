@@ -13,9 +13,7 @@ import androidx.compose.ui.Modifier
 import je.ramos.poptracker.ui.theme.PopTrackerTheme
 import je.ramos.poptracker.navigation.Screen
 import je.ramos.poptracker.navigation.bottomNavItems
-import je.ramos.poptracker.ui.screens.CollectionScreen
-import je.ramos.poptracker.ui.screens.ExploreScreen
-import je.ramos.poptracker.ui.screens.ProfileScreen
+import je.ramos.poptracker.ui.screens.TrackerScreen
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -23,31 +21,6 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Preview
 fun App() {
         PopTrackerTheme {
-            var selectedScreen by remember { mutableStateOf(Screen.Explore.route) }
-            
-            Scaffold(
-                modifier = Modifier.fillMaxSize(),
-                bottomBar = {
-                    NavigationBar(
-                        contentColor = MaterialTheme.colorScheme.onSurface,
-                        containerColor = MaterialTheme.colorScheme.surface
-                    ) {
-                        bottomNavItems.forEach { screen ->
-                            NavigationBarItem(
-                                icon = { Icon(painter = painterResource(screen.icon), contentDescription = screen.title) },
-                                label = { Text(screen.title) },
-                                selected = selectedScreen == screen.route,
-                                onClick = { selectedScreen = screen.route }
-                            )
-                        }
-                    }
-                }
-            ) { paddingValues ->
-                when (selectedScreen) {
-                    Screen.Explore.route -> ExploreScreen(modifier = Modifier.padding(paddingValues))
-                    Screen.Collection.route -> CollectionScreen()
-                    Screen.Profile.route -> ProfileScreen()
-                }
-            }
+            TrackerScreen(modifier = Modifier)
         }
 }

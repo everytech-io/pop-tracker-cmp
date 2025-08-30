@@ -25,6 +25,7 @@ import je.ramos.poptracker.ui.components.everyapp.EveryImageBoxConfig
 import je.ramos.poptracker.ui.components.everyapp.EveryText
 import je.ramos.poptracker.ui.components.everyapp.EveryTextConfig
 import je.ramos.poptracker.ui.components.everyapp.EveryTextStyle
+import org.jetbrains.compose.resources.painterResource
 
 @Immutable
 data class ProductCardConfig(
@@ -60,7 +61,7 @@ fun ProductCard(
         ) {
             // Product Image
             EveryImageBox(
-                painter = product.image,
+                painter = painterResource(product.imageDrawableResource),
                 config = EveryImageBoxConfig(
                     aspectRatio = config.imageAspectRatio,
                     shape = RoundedCornerShape(config.imageCornerRadius),
@@ -98,7 +99,7 @@ fun ProductCard(
             )
             
             // Primary Marketplace (Official/Main)
-            product.marketplaces.firstOrNull { it.marketplace.type == MarketplaceType.Official }?.let { link ->
+            product.marketplaces.firstOrNull { it.type == MarketplaceType.Official }?.let { link ->
                 Box(
                     modifier = Modifier.padding(horizontal = config.horizontalPadding)
                 ) {
@@ -110,7 +111,7 @@ fun ProductCard(
             }
             
             // Divider
-            if (config.showDivider && product.marketplaces.any { it.marketplace.type == MarketplaceType.Secondary }) {
+            if (config.showDivider && product.marketplaces.any { it.type == MarketplaceType.Secondary }) {
                 HorizontalDivider(
                     modifier = Modifier.padding(horizontal = config.horizontalPadding)
                 )
@@ -118,7 +119,7 @@ fun ProductCard(
             
             // Secondary Marketplaces
             val secondaryMarketplaces = product.marketplaces.filter { 
-                it.marketplace.type == MarketplaceType.Secondary 
+                it.type == MarketplaceType.Secondary
             }
             if (secondaryMarketplaces.isNotEmpty()) {
                 MarketplaceButtonRow(
