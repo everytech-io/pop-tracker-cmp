@@ -15,7 +15,7 @@ struct ContentView: View {
         ComposeView()
                 .ignoresSafeArea(.keyboard) // Compose has own keyboard handler
                 .background(Color(red: 1.0, green: 0.984, blue: 0.968)) // #FFFBF7 background
-                .ignoresSafeArea(.container, edges: .bottom) // Extend to bottom safe area
+                .ignoresSafeArea(.container, edges: .all) // Extend to bottom safe area
     }
 }
 

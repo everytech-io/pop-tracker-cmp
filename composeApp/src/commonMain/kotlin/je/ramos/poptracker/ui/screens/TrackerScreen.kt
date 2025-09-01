@@ -1,8 +1,13 @@
 package je.ramos.poptracker.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -16,7 +21,13 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.TopAppBarState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -26,6 +37,7 @@ import je.ramos.poptracker.ui.components.product.MarketplaceLink
 import je.ramos.poptracker.ui.components.product.MarketplaceType
 import je.ramos.poptracker.ui.components.product.Product
 import je.ramos.poptracker.ui.components.product.ProductCard
+import je.ramos.poptracker.ui.components.product.ProductCardConfig
 import je.ramos.poptracker.ui.components.product.ProductPrice
 import je.ramos.poptracker.ui.theme.PopTrackerTheme
 import je.ramos.poptracker.ui.viewmodels.TrackerViewModel
@@ -61,25 +73,53 @@ private fun TrackerScreenContent(
     val topAppBarState: TopAppBarState = rememberTopAppBarState()
     val scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(topAppBarState)
     
+    // Derive shadow visibility from scroll state
+    val isScrolled by remember {
+        derivedStateOf {
+            topAppBarState.heightOffset < -1f
+        }
+    }
+    
     Scaffold(
         modifier = modifier
             .fillMaxSize()
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
+            ,
         topBar = {
-            LargeTopAppBar(
-                title = {
-                    Text(
-                        text = "Drops",
-                        style = MaterialTheme.typography.headlineLarge,
-                        fontWeight = FontWeight.Bold
+            Box {
+                LargeTopAppBar(
+                    title = {
+                        Text(
+                            text = "Trending Items",
+                            style = MaterialTheme.typography.headlineLarge,
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
+                    scrollBehavior = scrollBehavior,
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.background,
+                        scrolledContainerColor = MaterialTheme.colorScheme.surface
                     )
-                },
-                scrollBehavior = scrollBehavior,
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    scrolledContainerColor = MaterialTheme.colorScheme.surface
                 )
-            )
+                
+                // Custom shadow gradient that appears when scrolled
+                if (isScrolled) {
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.BottomStart)
+                            .fillMaxWidth()
+                            .height(8.dp)
+                            .background(
+                                brush = Brush.verticalGradient(
+                                    colors = listOf(
+                                        Color.Black.copy(alpha = 0.15f),
+                                        Color.Transparent
+                                    )
+                                )
+                            )
+                    )
+                }
+            }
         }
     ) { paddingValues ->
 
@@ -90,7 +130,7 @@ private fun TrackerScreenContent(
             contentPadding = paddingValues
         ) {
             items(items = products) {
-                ProductCard(product = it)
+                ProductCard(product = it, config= ProductCardConfig().copy(cardCornerRadius = 0.dp))
             }
         }
     }
