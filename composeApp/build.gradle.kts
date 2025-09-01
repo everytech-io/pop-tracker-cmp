@@ -64,11 +64,11 @@ kotlin {
 }
 
 android {
-    namespace = "je.ramos.poptracker"
+    namespace = "io.everytech.poptracker"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "je.ramos.poptracker"
+        applicationId = "io.everytech.poptracker"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
