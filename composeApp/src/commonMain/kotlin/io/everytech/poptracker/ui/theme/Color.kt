@@ -2,58 +2,59 @@ package io.everytech.poptracker.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Minimal color palette: White, Black, and #E35335 accent
-// Following the 60-30-10 rule: 60% white, 30% grays, 10% accent
+// Expressive Red Color Palette: Material 3 with #B7341C primary
+// Luxury white-dominant aesthetic with red accents
+// Tonal palette derived from B7341C for Material 3 expressive theming
 
-// Light Theme Colors
-val primaryLight = Color(0xFFE35335)  // Pop red accent - used sparingly
+// Light Theme Colors - Red Expressive
+val primaryLight = Color(0xFFB7341C)  // Rich red primary - expressive accent
 val onPrimaryLight = Color(0xFFFFFFFF)  // White on accent
-val primaryContainerLight = Color(0xFFFFF0ED)  // Very subtle tint of accent
-val onPrimaryContainerLight = Color(0xFF000000)  // Pure black text
-val secondaryLight = Color(0xFF666666)  // Medium gray for secondary elements
+val primaryContainerLight = Color(0xFFFFFCFC)  // Luxury white with red undertone
+val onPrimaryContainerLight = Color(0xFF3D0F08)  // Dark red for contrast
+val secondaryLight = Color(0xFF8A8A8A)  // Sophisticated gray
 val onSecondaryLight = Color(0xFFFFFFFF)  // White
-val secondaryContainerLight = Color(0xFFF5F5F5)  // Light gray background
-val onSecondaryContainerLight = Color(0xFF000000)  // Black text
-val tertiaryLight = Color(0xFFE35335)  // Same as primary for consistency
+val secondaryContainerLight = Color(0xFFFEFEFE)  // Almost pure white
+val onSecondaryContainerLight = Color(0xFF1C1C1C)  // Near black text
+val tertiaryLight = Color(0xFFB7341C)  // Same red primary for consistency
 val onTertiaryLight = Color(0xFFFFFFFF)  // White
-val tertiaryContainerLight = Color(0xFFFFF0ED)  // Very subtle tint
-val onTertiaryContainerLight = Color(0xFF000000)  // Black text
+val tertiaryContainerLight = Color(0xFFFFFCFC)  // Matching primary container
+val onTertiaryContainerLight = Color(0xFF3D0F08)  // Dark red
 val errorLight = Color(0xFFD32F2F)  // Standard error red
 val onErrorLight = Color(0xFFFFFFFF)  // White
 val errorContainerLight = Color(0xFFFFE5E5)  // Light error background
 val onErrorContainerLight = Color(0xFF000000)  // Black text
-val backgroundLight = Color(0xFFF8F8F8)  // Light grayish background
-val onBackgroundLight = Color(0xFF000000)  // Pure black text
-val surfaceLight = Color(0xFFFAFAFA)  // Pure white surface (for cards)
-val onSurfaceLight = Color(0xFF000000)  // Pure black text
-val surfaceVariantLight = Color(0xFFFFFFFF)  // White for secondary surfaces
-val onSurfaceVariantLight = Color(0xFF1A1A1A)  // Dark gray text
-val outlineLight = Color(0xFFE0E0E0)  // Light gray outline
-val outlineVariantLight = Color(0xFFEEEEEE)  // Very light gray outline
+val backgroundLight = Color(0xFFFEFEFE)  // Luxury white background
+val onBackgroundLight = Color(0xFF1C1C1C)  // Near black text for elegance
+val surfaceLight = Color(0xFFFFFFFF)  // Pure white surface (for cards)
+val onSurfaceLight = Color(0xFF1C1C1C)  // Near black text
+val surfaceVariantLight = Color(0xFFFFFFFF)  // Pure white for secondary surfaces
+val onSurfaceVariantLight = Color(0xFF4A4A4A)  // Refined gray text
+val outlineLight = Color(0xFFF0F0F0)  // Very light gray outline
+val outlineVariantLight = Color(0xFFF8F8F8)  // Near white outline
 val scrimLight = Color(0xFF000000)  // Black scrim
 val inverseSurfaceLight = Color(0xFF1A1A1A)  // Near black
 val inverseOnSurfaceLight = Color(0xFFFFFFFF)  // White
-val inversePrimaryLight = Color(0xFFFF6B50)  // Lighter accent
-val surfaceDimLight = Color(0xFFFAFAFA)  // Slightly dimmed white
+val inversePrimaryLight = Color(0xFFFFB3A5)  // Soft red inverse
+val surfaceDimLight = Color(0xFFFDFDFD)  // Slightly dimmed luxury white
 val surfaceBrightLight = Color(0xFFFFFFFF)  // Pure white
 val surfaceContainerLowestLight = Color(0xFFFFFFFF)  // Pure white (cards)
 val surfaceContainerLowLight = Color(0xFFFFFFFF)  // Pure white (cards)
-val surfaceContainerLight = Color(0xFFFFFFFF)  // Pure white (cards)
-val surfaceContainerHighLight = Color(0xFFFFFFFF)  // Pure white (cards)
-val surfaceContainerHighestLight = Color(0xFFFFFFFF)  // Pure white (cards)
+val surfaceContainerLight = Color(0xFFFEFEFE)  // Near white (subtle elevation)
+val surfaceContainerHighLight = Color(0xFFFCFCFC)  // Light gray (higher elevation)
+val surfaceContainerHighestLight = Color(0xFFFAFAFA)  // Subtle gray (highest elevation)
 
 // Medium Contrast Light Theme
-val primaryLightMediumContrast = Color(0xFFC73420)  // Darker accent
+val primaryLightMediumContrast = Color(0xFF9A2C15)  // Darker red
 val onPrimaryLightMediumContrast = Color(0xFFFFFFFF)
-val primaryContainerLightMediumContrast = Color(0xFFE35335)
+val primaryContainerLightMediumContrast = Color(0xFFB7341C)
 val onPrimaryContainerLightMediumContrast = Color(0xFFFFFFFF)
 val secondaryLightMediumContrast = Color(0xFF4A4A4A)
 val onSecondaryLightMediumContrast = Color(0xFFFFFFFF)
 val secondaryContainerLightMediumContrast = Color(0xFF808080)
 val onSecondaryContainerLightMediumContrast = Color(0xFFFFFFFF)
-val tertiaryLightMediumContrast = Color(0xFFC73420)
+val tertiaryLightMediumContrast = Color(0xFF9A2C15)
 val onTertiaryLightMediumContrast = Color(0xFFFFFFFF)
-val tertiaryContainerLightMediumContrast = Color(0xFFE35335)
+val tertiaryContainerLightMediumContrast = Color(0xFFB7341C)
 val onTertiaryContainerLightMediumContrast = Color(0xFFFFFFFF)
 val errorLightMediumContrast = Color(0xFFB71C1C)
 val onErrorLightMediumContrast = Color(0xFFFFFFFF)
@@ -80,17 +81,17 @@ val surfaceContainerHighLightMediumContrast = Color(0xFFE0E0E0)
 val surfaceContainerHighestLightMediumContrast = Color(0xFFD6D6D6)
 
 // High Contrast Light Theme
-val primaryLightHighContrast = Color(0xFF8B1A0C)  // Very dark accent
+val primaryLightHighContrast = Color(0xFF5C1A0B)  // Very dark red
 val onPrimaryLightHighContrast = Color(0xFFFFFFFF)
-val primaryContainerLightHighContrast = Color(0xFFC73420)
+val primaryContainerLightHighContrast = Color(0xFF9A2C15)
 val onPrimaryContainerLightHighContrast = Color(0xFFFFFFFF)
 val secondaryLightHighContrast = Color(0xFF1A1A1A)
 val onSecondaryLightHighContrast = Color(0xFFFFFFFF)
 val secondaryContainerLightHighContrast = Color(0xFF4A4A4A)
 val onSecondaryContainerLightHighContrast = Color(0xFFFFFFFF)
-val tertiaryLightHighContrast = Color(0xFF8B1A0C)
+val tertiaryLightHighContrast = Color(0xFF5C1A0B)
 val onTertiaryLightHighContrast = Color(0xFFFFFFFF)
-val tertiaryContainerLightHighContrast = Color(0xFFC73420)
+val tertiaryContainerLightHighContrast = Color(0xFF9A2C15)
 val onTertiaryContainerLightHighContrast = Color(0xFFFFFFFF)
 val errorLightHighContrast = Color(0xFF8B0000)
 val onErrorLightHighContrast = Color(0xFFFFFFFF)
@@ -117,17 +118,17 @@ val surfaceContainerHighLightHighContrast = Color(0xFFD0D0D0)
 val surfaceContainerHighestLightHighContrast = Color(0xFFC0C0C0)
 
 // Dark Theme Colors
-val primaryDark = Color(0xFFE35335)  // Keep accent same in dark theme
+val primaryDark = Color(0xFFFFB3A5)  // Light red for dark theme
 val onPrimaryDark = Color(0xFFFFFFFF)  // White on accent
-val primaryContainerDark = Color(0xFF1A0A08)  // Very dark with subtle red tint
-val onPrimaryContainerDark = Color(0xFFFFB3A5)  // Light accent tint
+val primaryContainerDark = Color(0xFF3D0F08)  // Dark red container
+val onPrimaryContainerDark = Color(0xFFFFB3A5)  // Light red tint
 val secondaryDark = Color(0xFFB3B3B3)  // Light gray for dark theme
 val onSecondaryDark = Color(0xFF000000)  // Black on light gray
 val secondaryContainerDark = Color(0xFF1A1A1A)  // Near black container
 val onSecondaryContainerDark = Color(0xFFE6E6E6)  // Light gray text
-val tertiaryDark = Color(0xFFE35335)  // Same as primary
+val tertiaryDark = Color(0xFFFFB3A5)  // Same as primary
 val onTertiaryDark = Color(0xFFFFFFFF)
-val tertiaryContainerDark = Color(0xFF1A0A08)
+val tertiaryContainerDark = Color(0xFF3D0F08)
 val onTertiaryContainerDark = Color(0xFFFFB3A5)
 val errorDark = Color(0xFFFF6659)  // Bright error for dark theme
 val onErrorDark = Color(0xFF000000)

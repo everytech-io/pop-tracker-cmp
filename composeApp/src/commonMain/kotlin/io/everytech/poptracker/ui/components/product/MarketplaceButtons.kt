@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.twotone.Language
+import androidx.compose.material.icons.twotone.Web
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -35,7 +37,7 @@ fun PrimaryMarketplaceButton(
         config = EveryButtonConfig(
             style = EveryButtonStyle.Elevated,
             size = EveryButtonSize.Medium,
-            icon = ButtonIcon.Vector(Icons.Default.ShoppingCart),
+            icon = ButtonIcon.Vector(Icons.TwoTone.Language),
             iconPosition = IconPosition.Start,
             fullWidth = true,
             enabled = marketplace.availability == AvailabilityStatus.InStock
