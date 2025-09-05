@@ -10,6 +10,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
@@ -652,5 +655,184 @@ fun EveryButtonCustomColorsPreview() {
                 )
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun EveryButtonComprehensiveSizingPreview() {
+    PopTrackerTheme {
+        Surface(
+            modifier = Modifier.padding(16.dp),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(24.dp)
+            ) {
+                Text(
+                    text = "Button Sizing Guide - All Styles & Sizes",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
+                
+                // Primary Style with all sizes
+                ButtonStyleSection(
+                    title = "Primary (Filled)",
+                    style = EveryButtonStyle.Primary
+                )
+                
+                // Secondary Style with all sizes
+                ButtonStyleSection(
+                    title = "Secondary (Filled Tonal)",
+                    style = EveryButtonStyle.Secondary
+                )
+                
+                // Elevated Style with all sizes
+                ButtonStyleSection(
+                    title = "Elevated",
+                    style = EveryButtonStyle.Elevated
+                )
+                
+                // Outlined Style with all sizes
+                ButtonStyleSection(
+                    title = "Outlined",
+                    style = EveryButtonStyle.Outlined
+                )
+                
+                // Text Style with all sizes
+                ButtonStyleSection(
+                    title = "Text",
+                    style = EveryButtonStyle.Text
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ButtonStyleSection(
+    title: String,
+    style: EveryButtonStyle
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.SemiBold
+        )
+        
+        // Text only buttons
+        Text(
+            text = "Text Only",
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            EveryButtonSize.entries.forEach { size ->
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    EveryButton(
+                        text = getSizeLabel(size),
+                        onClick = { },
+                        config = EveryButtonConfig(
+                            style = style,
+                            size = size
+                        )
+                    )
+                    Text(
+                        text = "${size.minHeight}dp",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
+        
+        // Icon on left
+        Text(
+            text = "Icon Left",
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            EveryButtonSize.entries.forEach { size ->
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    EveryButton(
+                        text = getSizeLabel(size),
+                        onClick = { },
+                        config = EveryButtonConfig(
+                            style = style,
+                            size = size,
+                            icon = ButtonIcon.Vector(Icons.Default.Add),
+                            iconPosition = IconPosition.Start
+                        )
+                    )
+                    Text(
+                        text = "${size.minHeight}dp",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
+        
+        // Icon on right
+        Text(
+            text = "Icon Right",
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            EveryButtonSize.entries.forEach { size ->
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    EveryButton(
+                        text = getSizeLabel(size),
+                        onClick = { },
+                        config = EveryButtonConfig(
+                            style = style,
+                            size = size,
+                            icon = ButtonIcon.Vector(Icons.Default.ShoppingCart),
+                            iconPosition = IconPosition.End
+                        )
+                    )
+                    Text(
+                        text = "${size.minHeight}dp",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun getSizeLabel(size: EveryButtonSize): String {
+    return when (size) {
+        EveryButtonSize.ExtraSmall -> "XS"
+        EveryButtonSize.Small -> "S"
+        EveryButtonSize.Medium -> "M"
+        EveryButtonSize.Large -> "L"
+        EveryButtonSize.ExtraLarge -> "XL"
     }
 }
