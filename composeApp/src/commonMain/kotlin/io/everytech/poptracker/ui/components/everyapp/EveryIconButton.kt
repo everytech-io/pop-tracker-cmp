@@ -165,8 +165,8 @@ fun EveryIconButton(
                         disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
                     ),
                     elevation = CardDefaults.cardElevation(
-                        defaultElevation = 6.dp,
-                        pressedElevation = 8.dp,
+                        defaultElevation = 2.dp,
+                        pressedElevation = 4.dp,
                         disabledElevation = 0.dp
                     )
                 ) {
