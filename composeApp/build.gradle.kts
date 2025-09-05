@@ -65,6 +65,7 @@ kotlin {
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation("org.jetbrains.compose.material3:material3:1.9.0-alpha04")
+            implementation("org.jetbrains.compose.material:material-icons-extended:1.7.3")
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
