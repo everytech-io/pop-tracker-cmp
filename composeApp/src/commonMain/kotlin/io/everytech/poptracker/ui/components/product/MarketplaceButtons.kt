@@ -18,6 +18,7 @@ import io.everytech.poptracker.ui.components.everyapp.EveryIconButtonConfig
 import io.everytech.poptracker.ui.components.everyapp.EveryIconButtonSize
 import io.everytech.poptracker.ui.components.everyapp.EveryIconButtonStyle
 import androidx.compose.foundation.Image
+import androidx.compose.material3.Text
 import org.jetbrains.compose.resources.painterResource
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -35,11 +36,12 @@ fun PrimaryMarketplaceButton(
             .fillMaxWidth(),
         contentPadding = ButtonDefaults.contentPaddingFor(size)
     ) {
-        Image(
-            painter = painterResource(marketplace.iconDrawableResource),
-            contentDescription = marketplace.name,
-            modifier = Modifier.width(64.dp)
-        )
+//        Image(
+//            painter = painterResource(marketplace.iconDrawableResource),
+//            contentDescription = marketplace.name,
+//            modifier = Modifier.width(64.dp)
+//        )
+        Text("Buy Now")
     }
 }
 

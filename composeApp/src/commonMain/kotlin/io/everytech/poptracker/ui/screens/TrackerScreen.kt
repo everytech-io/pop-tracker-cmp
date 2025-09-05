@@ -25,7 +25,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -124,68 +123,8 @@ private fun TrackerScreenContent(
 @Composable
 fun TrackerScreenContentPreview() {
     PopTrackerTheme {
-//        val sampleProducts = listOf(
-//            Product(
-//                id = "1",
-//                title = "Labubu Halloween Keychain",
-//                subtitle = "Limited Edition Collectible",
-//                image = painterResource(Res.drawable.labubu_demo),
-//                price = ProductPrice(amount = "15.99"),
-//                marketplaces = listOf(
-//                    MarketplaceLink(
-//                        "Popmart",
-//                        icon = painterResource(Res.drawable.popmart),
-//                        type = MarketplaceType.Official,
-//                        url = "",
-//                        availability = AvailabilityStatus.InStock
-//                    ),
-//                    MarketplaceLink(
-//                        "Shopee",
-//                        icon = painterResource(Res.drawable.shopee),
-//                        type = MarketplaceType.Secondary,
-//                        url = "",
-//                        availability = AvailabilityStatus.OutOfStock
-//                    ),
-//                    MarketplaceLink(
-//                        "Popmart",
-//                        icon = painterResource(Res.drawable.lazada),
-//                        type = MarketplaceType.Secondary,
-//                        url = "",
-//                        availability = AvailabilityStatus.InStock
-//                    ),
-//                    MarketplaceLink(
-//                        "Popmart",
-//                        icon = painterResource(Res.drawable.tiktok),
-//                        type = MarketplaceType.Secondary,
-//                        url = "",
-//                        availability = AvailabilityStatus.InStock
-//                    ),
-//                )
-//            ),
-//            Product(
-//                id = "2",
-//                title = "Crybaby x Labubu Blind Box",
-//                subtitle = "Series 1 Mystery Figure",
-//                image = painterResource(Res.drawable.labubu_demo),
-//                price = ProductPrice(amount = "12.99")
-//            ),
-//            Product(
-//                id = "3",
-//                title = "Dimoo Space Travel Series",
-//                subtitle = "Astronaut Edition",
-//                image = painterResource(Res.drawable.labubu_demo),
-//                price = ProductPrice(amount = "14.99")
-//            ),
-//            Product(
-//                id = "4",
-//                title = "Skull Panda City of Night",
-//                subtitle = "Glow in the Dark",
-//                image = painterResource(Res.drawable.labubu_demo),
-//                price = ProductPrice(amount = "16.99")
-//            )
-//        )
 
-        val sampleProducts = emptyList<Product>()
+        val sampleProducts = TrackerViewModel().products.value
         TrackerScreenContent(
             modifier = Modifier,
             products = sampleProducts
