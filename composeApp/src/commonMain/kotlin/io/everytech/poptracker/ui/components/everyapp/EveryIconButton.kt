@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.FilledTonalIconButton
@@ -15,6 +16,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -42,6 +47,7 @@ enum class EveryIconButtonStyle {
     Standard,
     Filled,
     FilledTonal,
+    Elevated,
     Outlined
 }
 
@@ -144,6 +150,41 @@ fun EveryIconButton(
                             else -> null
                         }
                     )
+                }
+            }
+            EveryIconButtonStyle.Elevated -> {
+                Card(
+                    onClick = onClick,
+                    modifier = modifier.size(config.actualContainerSize),
+                    enabled = config.enabled,
+                    shape = CircleShape,
+                    colors = CardDefaults.cardColors(
+                        containerColor = config.containerColor ?: MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.8f),
+                        contentColor = config.contentColor ?: MaterialTheme.colorScheme.onPrimaryContainer,
+                        disabledContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
+                        disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                    ),
+                    elevation = CardDefaults.cardElevation(
+                        defaultElevation = 6.dp,
+                        pressedElevation = 8.dp,
+                        disabledElevation = 0.dp
+                    )
+                ) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier.size(config.actualContainerSize)
+                    ) {
+                        Image(
+                            painter = painter,
+                            contentDescription = config.tooltipText,
+                            modifier = Modifier.size(config.actualIconSize),
+                            colorFilter = when {
+                                !config.enabled -> ColorFilter.tint(Color.Gray)
+                                config.iconTint != null -> ColorFilter.tint(config.iconTint)
+                                else -> null
+                            }
+                        )
+                    }
                 }
             }
             EveryIconButtonStyle.Outlined -> {
@@ -305,7 +346,7 @@ fun EveryIconButtonStylesPreview() {
                     fontWeight = FontWeight.Bold
                 )
                 
-                // Show all styles with Medium size
+                // First row of styles
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly,
@@ -359,6 +400,45 @@ fun EveryIconButtonStylesPreview() {
                         Text("Tonal", style = MaterialTheme.typography.labelSmall)
                     }
                     
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        EveryIconButton(
+                            painter = painterResource(Res.drawable.popmart),
+                            onClick = { },
+                            config = EveryIconButtonConfig(
+                                size = EveryIconButtonSize.Medium,
+                                style = EveryIconButtonStyle.Elevated,
+                                tooltipText = "Elevated"
+                            )
+                        )
+                        Text("Elevated", style = MaterialTheme.typography.labelSmall)
+                    }
+                    
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        EveryIconButton(
+                            painter = painterResource(Res.drawable.popmart),
+                            onClick = { },
+                            config = EveryIconButtonConfig(
+                                size = EveryIconButtonSize.Medium,
+                                style = EveryIconButtonStyle.Outlined,
+                                tooltipText = "Outlined"
+                            )
+                        )
+                        Text("Outlined", style = MaterialTheme.typography.labelSmall)
+                    }
+                }
+                
+                // Second row of styles
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -645,6 +725,51 @@ fun EveryIconButtonDisabledStatesPreview() {
                                     style = EveryIconButtonStyle.FilledTonal,
                                     enabled = false,
                                     tooltipText = "Disabled Filled Tonal"
+                                )
+                            )
+                            Text("Disabled", style = MaterialTheme.typography.labelSmall, color = Color.Gray)
+                        }
+                    }
+                    
+                    // Elevated
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(24.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Elevated:",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.weight(0.3f)
+                        )
+                        
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            EveryIconButton(
+                                painter = painterResource(Res.drawable.icon_open_link),
+                                onClick = { },
+                                config = EveryIconButtonConfig(
+                                    style = EveryIconButtonStyle.Elevated,
+                                    enabled = true,
+                                    tooltipText = "Enabled Elevated"
+                                )
+                            )
+                            Text("Enabled", style = MaterialTheme.typography.labelSmall)
+                        }
+                        
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            EveryIconButton(
+                                painter = painterResource(Res.drawable.icon_open_link),
+                                onClick = { },
+                                config = EveryIconButtonConfig(
+                                    style = EveryIconButtonStyle.Elevated,
+                                    enabled = false,
+                                    tooltipText = "Disabled Elevated"
                                 )
                             )
                             Text("Disabled", style = MaterialTheme.typography.labelSmall, color = Color.Gray)

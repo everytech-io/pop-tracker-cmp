@@ -64,7 +64,7 @@ fun MarketplaceButtonRow(
                 painter = painterResource(link.iconDrawableResource),
                 onClick = { onMarketplaceClick(link) },
                 config = EveryIconButtonConfig(
-                    style = EveryIconButtonStyle.FilledTonal,
+                    style = EveryIconButtonStyle.Elevated,
                     enabled = link.availability == AvailabilityStatus.InStock,
                     size = EveryIconButtonSize.ExtraSmall,
                     tooltipText = link.name
