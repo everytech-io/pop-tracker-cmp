@@ -6,11 +6,26 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingToolbarDefaults
+import androidx.compose.material3.FloatingToolbarDefaults.ScreenOffset
+import androidx.compose.material3.FloatingToolbarExitDirection.Companion.Bottom
+import androidx.compose.material3.HorizontalFloatingToolbar
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -22,7 +37,10 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -50,7 +68,7 @@ fun TrackerScreen(
     TrackerScreenContent(modifier = modifier, products = products)
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun TrackerScreenContent(
     modifier: Modifier = Modifier,
@@ -58,8 +76,9 @@ private fun TrackerScreenContent(
 ) {
 
     val topAppBarState: TopAppBarState = rememberTopAppBarState()
-    val scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(topAppBarState)
-    
+    val scrollBehavior: TopAppBarScrollBehavior =
+        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(topAppBarState)
+
     // Derive border opacity from scroll state
     val borderOpacity by remember {
         derivedStateOf {
@@ -68,11 +87,16 @@ private fun TrackerScreenContent(
             ((-currentOffset / maxOffset).coerceIn(0f, 1f) * 0.12f)
         }
     }
-    
+
+    val exitAlwaysScrollBehavior =
+        FloatingToolbarDefaults.exitAlwaysScrollBehavior(exitDirection = Bottom)
+    var expanded by rememberSaveable { mutableStateOf(true) }
+    val vibrantColors = FloatingToolbarDefaults.vibrantFloatingToolbarColors()
     Scaffold(
         modifier = modifier
             .fillMaxSize()
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
+            .nestedScroll(exitAlwaysScrollBehavior),
         topBar = {
             Box {
                 LargeTopAppBar(
@@ -89,7 +113,7 @@ private fun TrackerScreenContent(
                         scrolledContainerColor = MaterialTheme.colorScheme.surface
                     )
                 )
-                
+
                 // Subtle bottom border that fades in proportionally when scrolled
                 if (borderOpacity > 0f) {
                     Box(
@@ -101,9 +125,41 @@ private fun TrackerScreenContent(
                     )
                 }
             }
+        },
+        // When setting this to `FabPosition.Start` remember to set a
+        // `floatingActionButtonPosition = FloatingToolbarHorizontalFabPosition.Start` at the
+        // HorizontalFloatingToolbar as well.
+        floatingActionButtonPosition = FabPosition.Center,
+        floatingActionButton = {
+
+            HorizontalFloatingToolbar(
+                expanded = expanded,
+                floatingActionButton = {
+                    // Match the FAB to the vibrantColors. See also StandardFloatingActionButton.
+                    FloatingToolbarDefaults.VibrantFloatingActionButton(
+                        onClick = { /* doSomething() */ }
+                    ) {
+                        Icon(Icons.Filled.Add, "Localized description")
+                    }
+                },
+                colors = vibrantColors,
+                content = {
+                    IconButton(onClick = { /* doSomething() */ }) {
+                        Icon(Icons.Filled.Person, contentDescription = "Localized description")
+                    }
+                    IconButton(onClick = { /* doSomething() */ }) {
+                        Icon(Icons.Filled.Edit, contentDescription = "Localized description")
+                    }
+                    IconButton(onClick = { /* doSomething() */ }) {
+                        Icon(Icons.Filled.Favorite, contentDescription = "Localized description")
+                    }
+                    IconButton(onClick = { /* doSomething() */ }) {
+                        Icon(Icons.Filled.MoreVert, contentDescription = "Localized description")
+                    }
+                },
+            )
         }
     ) { paddingValues ->
-
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -112,7 +168,10 @@ private fun TrackerScreenContent(
             contentPadding = paddingValues
         ) {
             items(items = products) {
-                ProductCard(product = it, config= ProductCardConfig().copy(cardCornerRadius = 0.dp))
+                ProductCard(
+                    product = it,
+                    config = ProductCardConfig().copy(cardCornerRadius = 0.dp)
+                )
             }
         }
     }

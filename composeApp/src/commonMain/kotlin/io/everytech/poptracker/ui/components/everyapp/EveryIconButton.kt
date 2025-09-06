@@ -3,23 +3,21 @@ package io.everytech.poptracker.ui.components.everyapp
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.FilledTonalIconButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -153,38 +151,32 @@ fun EveryIconButton(
                 }
             }
             EveryIconButtonStyle.Elevated -> {
-                Card(
+                // Use ElevatedButton with circular shape to match Material3 design
+                // This follows the same pattern as EveryButton's elevated style
+                ElevatedButton(
                     onClick = onClick,
                     modifier = modifier.size(config.actualContainerSize),
                     enabled = config.enabled,
                     shape = CircleShape,
-                    colors = CardDefaults.cardColors(
-                        containerColor = config.containerColor ?: MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.8f),
-                        contentColor = config.contentColor ?: MaterialTheme.colorScheme.onPrimaryContainer,
+                    colors = ButtonDefaults.elevatedButtonColors(
+                        containerColor = config.containerColor ?: MaterialTheme.colorScheme.surface,
+                        contentColor = config.contentColor ?: MaterialTheme.colorScheme.primary,
                         disabledContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
                         disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
                     ),
-                    elevation = CardDefaults.cardElevation(
-                        defaultElevation = 2.dp,
-                        pressedElevation = 4.dp,
-                        disabledElevation = 0.dp
-                    )
+                    elevation = ButtonDefaults.elevatedButtonElevation(),
+                    contentPadding = PaddingValues(0.dp) // No padding for icon buttons
                 ) {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier.size(config.actualContainerSize)
-                    ) {
-                        Image(
-                            painter = painter,
-                            contentDescription = config.tooltipText,
-                            modifier = Modifier.size(config.actualIconSize),
-                            colorFilter = when {
-                                !config.enabled -> ColorFilter.tint(Color.Gray)
-                                config.iconTint != null -> ColorFilter.tint(config.iconTint)
-                                else -> null
-                            }
-                        )
-                    }
+                    Image(
+                        painter = painter,
+                        contentDescription = config.tooltipText,
+                        modifier = Modifier.size(config.actualIconSize),
+                        colorFilter = when {
+                            !config.enabled -> ColorFilter.tint(Color.Gray)
+                            config.iconTint != null -> ColorFilter.tint(config.iconTint)
+                            else -> null
+                        }
+                    )
                 }
             }
             EveryIconButtonStyle.Outlined -> {
