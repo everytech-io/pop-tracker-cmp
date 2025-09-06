@@ -16,3 +16,11 @@ captures
 !*.xcodeproj/project.xcworkspace/
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
+
+# Android signing
+*.jks
+*.keystore
+*.jks.base64
+*.keystore.base64
+keystore.properties
+service-account-key.json

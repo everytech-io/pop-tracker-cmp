@@ -1,0 +1,191 @@
+name: Android CI/CD - Play Store
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  release:
+    types: [ published ]
+  workflow_dispatch:
+    inputs:
+      track:
+        description: 'Play Store Track'
+        required: true
+        default: 'internal'
+        type: choice
+        options:
+          - internal
+          - alpha
+          - beta
+          - production
+
+env:
+  GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx4g -XX:+UseParallelGC"
+  KOTLIN_VERSION: "2.1.0"
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+      
+    - name: Cache Gradle packages
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+          
+    - name: Make gradlew executable
+      run: chmod +x ./gradlew
+      
+    - name: Run lint
+      run: ./gradlew :composeApp:lintDebug
+      
+    - name: Run tests
+      run: ./gradlew :composeApp:testDebugUnitTest
+      
+    - name: Build debug APK
+      run: ./gradlew :composeApp:assembleDebug
+      
+    - name: Upload debug APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: debug-apk
+        path: composeApp/build/outputs/apk/debug/*.apk
+        
+  release-build:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+      
+    - name: Cache Gradle packages
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+          
+    - name: Make gradlew executable
+      run: chmod +x ./gradlew
+      
+    - name: Decode keystore
+      env:
+        KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+      run: |
+        echo "$KEYSTORE_BASE64" | base64 --decode > keystore.jks
+        
+    - name: Build release bundle
+      env:
+        KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+        KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+      run: |
+        ./gradlew :composeApp:bundleRelease \
+          -Pandroid.injected.signing.store.file=$PWD/keystore.jks \
+          -Pandroid.injected.signing.store.password=$KEYSTORE_PASSWORD \
+          -Pandroid.injected.signing.key.alias=$KEY_ALIAS \
+          -Pandroid.injected.signing.key.password=$KEY_PASSWORD
+          
+    - name: Upload release bundle
+      uses: actions/upload-artifact@v4
+      with:
+        name: release-bundle
+        path: composeApp/build/outputs/bundle/release/*.aab
+        
+    - name: Clean up keystore
+      if: always()
+      run: rm -f keystore.jks
+      
+  deploy-to-playstore:
+    needs: release-build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Download release bundle
+      uses: actions/download-artifact@v4
+      with:
+        name: release-bundle
+        path: ./bundle
+        
+    - name: Set up release track
+      id: track
+      run: |
+        if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+          echo "track=${{ github.event.inputs.track }}" >> $GITHUB_OUTPUT
+        elif [ "${{ github.event.release.prerelease }}" == "true" ]; then
+          echo "track=beta" >> $GITHUB_OUTPUT
+        else
+          echo "track=production" >> $GITHUB_OUTPUT
+        fi
+        
+    - name: Create service account key file
+      env:
+        PLAY_STORE_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
+      run: |
+        echo "$PLAY_STORE_SERVICE_ACCOUNT_JSON" > service-account-key.json
+        
+    - name: Upload to Google Play Console
+      uses: r0adkll/upload-google-play@v1
+      with:
+        serviceAccountJson: service-account-key.json
+        packageName: io.everytech.poptracker
+        releaseFiles: bundle/*.aab
+        track: ${{ steps.track.outputs.track }}
+        status: completed
+        inAppUpdatePriority: 2
+        whatsNewDirectory: .github/release-notes/
+        
+    - name: Clean up service account key
+      if: always()
+      run: rm -f service-account-key.json
+      
+  notify:
+    needs: [build-and-test, release-build, deploy-to-playstore]
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+    - name: Send notification
+      if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
+      run: |
+        if [ "${{ needs.deploy-to-playstore.result }}" == "success" ]; then
+          echo "✅ Successfully deployed to Play Store!"
+        elif [ "${{ needs.deploy-to-playstore.result }}" == "failure" ]; then
+          echo "❌ Deployment to Play Store failed!"
+        fi
