@@ -8,10 +8,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -20,6 +23,10 @@ import androidx.compose.ui.unit.dp
 import io.everytech.poptracker.ui.components.everyapp.AspectRatios
 import io.everytech.poptracker.ui.components.everyapp.EveryCard
 import io.everytech.poptracker.ui.components.everyapp.EveryCardConfig
+import io.everytech.poptracker.ui.components.everyapp.EveryIconButton
+import io.everytech.poptracker.ui.components.everyapp.EveryIconButtonConfig
+import io.everytech.poptracker.ui.components.everyapp.EveryIconButtonSize
+import io.everytech.poptracker.ui.components.everyapp.EveryIconButtonStyle
 import io.everytech.poptracker.ui.components.everyapp.EveryImageBox
 import io.everytech.poptracker.ui.components.everyapp.EveryImageBoxConfig
 import io.everytech.poptracker.ui.components.everyapp.EveryText
@@ -68,15 +75,31 @@ fun ProductCard(
             verticalArrangement = Arrangement.spacedBy(config.verticalSpacing),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Product Image
-            EveryImageBox(
-                painter = painterResource(product.imageDrawableResource),
-                config = EveryImageBoxConfig(
-                    aspectRatio = config.imageAspectRatio,
-                    shape = RoundedCornerShape(config.imageCornerRadius),
-                    contentDescription = product.title
+            // Product Image with Bookmark button
+            Box {
+                EveryImageBox(
+                    painter = painterResource(product.imageDrawableResource),
+                    config = EveryImageBoxConfig(
+                        aspectRatio = config.imageAspectRatio,
+                        shape = RoundedCornerShape(config.imageCornerRadius),
+                        contentDescription = product.title
+                    )
                 )
-            )
+                
+                // Bookmark button in upper right corner
+                EveryIconButton(
+                    painter = rememberVectorPainter(Icons.Outlined.BookmarkBorder),
+                    onClick = { /* Handle bookmark */ },
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(4.dp),
+                    config = EveryIconButtonConfig(
+                        style = EveryIconButtonStyle.FilledTonal,
+                        size = EveryIconButtonSize.Small,
+                        containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)
+                    )
+                )
+            }
             
             // Product Title
             EveryText(
