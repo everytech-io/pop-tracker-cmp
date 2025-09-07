@@ -24,3 +24,8 @@ captures
 *.keystore.base64
 keystore.properties
 service-account-key.json
+
+# Release builds (contain signed APK/AAB)
+composeApp/release/
+**/release/*.aab
+**/release/*.apk
