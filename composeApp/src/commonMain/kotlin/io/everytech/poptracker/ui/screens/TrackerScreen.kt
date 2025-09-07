@@ -13,10 +13,19 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.Bookmarks
+import androidx.compose.material.icons.filled.Collections
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Explore
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Bookmarks
+import androidx.compose.material.icons.outlined.Explore
+import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FabPosition
@@ -43,6 +52,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -111,7 +121,15 @@ private fun TrackerScreenContent(
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = MaterialTheme.colorScheme.background,
                         scrolledContainerColor = MaterialTheme.colorScheme.surface
-                    )
+                    ),
+                    actions = {
+                        IconButton(onClick = { /* Navigate to user profile */ }) {
+                            Icon(
+                                Icons.Default.Person,
+                                contentDescription = "User Profile"
+                            )
+                        }
+                    }
                 )
 
                 // Subtle bottom border that fades in proportionally when scrolled
@@ -139,22 +157,19 @@ private fun TrackerScreenContent(
                     FloatingToolbarDefaults.VibrantFloatingActionButton(
                         onClick = { /* doSomething() */ }
                     ) {
-                        Icon(Icons.Filled.Add, "Localized description")
+                        Icon(Icons.Filled.Search, "Localized description")
                     }
                 },
                 colors = vibrantColors,
                 content = {
                     IconButton(onClick = { /* doSomething() */ }) {
-                        Icon(Icons.Filled.Person, contentDescription = "Localized description")
+                        Icon(Icons.Outlined.Home, contentDescription = "Localized description")
                     }
                     IconButton(onClick = { /* doSomething() */ }) {
-                        Icon(Icons.Filled.Edit, contentDescription = "Localized description")
+                        Icon(Icons.Outlined.Explore, contentDescription = "Localized description")
                     }
                     IconButton(onClick = { /* doSomething() */ }) {
-                        Icon(Icons.Filled.Favorite, contentDescription = "Localized description")
-                    }
-                    IconButton(onClick = { /* doSomething() */ }) {
-                        Icon(Icons.Filled.MoreVert, contentDescription = "Localized description")
+                        Icon(Icons.Outlined.Bookmarks, contentDescription = "Localized description")
                     }
                 },
             )
@@ -162,9 +177,9 @@ private fun TrackerScreenContent(
     ) { paddingValues ->
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.padding(top = 8.dp),
+            modifier = Modifier.padding(top = 8.dp).background(MaterialTheme.colorScheme.primaryContainer),
             contentPadding = paddingValues
         ) {
             items(items = products) {
