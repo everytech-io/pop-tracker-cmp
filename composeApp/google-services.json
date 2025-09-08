@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "460917598804",
+    "project_id": "poptracker-a523a",
+    "storage_bucket": "poptracker-a523a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:460917598804:android:8a4b988c393c2ec4175bc1",
+        "android_client_info": {
+          "package_name": "io.everytech.poptracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7zCZuYu17RNif59PhKemF4Y5mU88mEyo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -10,6 +10,8 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
+    id("com.google.gms.google-services")
+
 }
 
 kotlin {
@@ -21,7 +23,6 @@ kotlin {
     }
     
     listOf(
-        iosX64(),
         iosArm64(),
         iosSimulatorArm64()
     ).forEach { iosTarget ->
@@ -60,6 +61,18 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation("dev.gitlive:firebase-common:2.3.0")
+            implementation("dev.gitlive:firebase-analytics:2.3.0")
+            implementation(project.dependencies.platform("com.google.firebase:firebase-bom:34.2.0"))
+
+
+            // TODO: Add the dependencies for Firebase products you want to use
+            // When using the BoM, don't specify versions in Firebase dependencies
+            implementation("com.google.firebase:firebase-analytics")
+        }
+        iosMain.dependencies {
+            implementation("dev.gitlive:firebase-common:2.3.0")
+            implementation("dev.gitlive:firebase-analytics:2.3.0")
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -70,7 +83,6 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(compose.materialIconsExtended)
-
 //            implementation(libs.androidx.lifecycle.runtime.compose)
 //            implementation(libs.androidx.lifecycle.viewmodel.compose)
 //            implementation(libs.androidx.navigation.compose)
