@@ -18,9 +18,11 @@ import androidx.compose.material.icons.outlined.Bookmarks
 import androidx.compose.material.icons.outlined.FiberNew
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Schedule
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingToolbarDefaults
 import androidx.compose.material3.FloatingToolbarExitDirection.Companion.Bottom
 import androidx.compose.material3.HorizontalFloatingToolbar
@@ -90,8 +92,6 @@ private fun TrackerScreenContent(
 
     val exitAlwaysScrollBehavior =
         FloatingToolbarDefaults.exitAlwaysScrollBehavior(exitDirection = Bottom)
-    var expanded by rememberSaveable { mutableStateOf(true) }
-    val vibrantColors = FloatingToolbarDefaults.vibrantFloatingToolbarColors()
     Scaffold(
         modifier = modifier
             .fillMaxSize()
@@ -137,39 +137,21 @@ private fun TrackerScreenContent(
         // When setting this to `FabPosition.Start` remember to set a
         // `floatingActionButtonPosition = FloatingToolbarHorizontalFabPosition.Start` at the
         // HorizontalFloatingToolbar as well.
-        floatingActionButtonPosition = FabPosition.Center,
+        floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
-
-            HorizontalFloatingToolbar(
-                expanded = expanded,
-                floatingActionButton = {
-                    // Match the FAB to the vibrantColors. See also StandardFloatingActionButton.
-                    FloatingToolbarDefaults.VibrantFloatingActionButton(
-                        onClick = { /* doSomething() */ }
-                    ) {
-                        Icon(Icons.Filled.Search, "Localized description")
-                    }
-                },
-                colors = vibrantColors,
-                content = {
-                    IconButton(onClick = { /* doSomething() */ }) {
-                        Icon(Icons.Outlined.Home, contentDescription = "Localized description")
-                    }
-                    IconButton(onClick = { /* doSomething() */ }) {
-                        Icon(Icons.Outlined.Schedule, contentDescription = "Localized description")
-                    }
-                    IconButton(onClick = { /* doSomething() */ }) {
-                        Icon(Icons.Outlined.Bookmarks, contentDescription = "Localized description")
-                    }
-                },
-            )
+            FloatingActionButton(
+                onClick = { /* doSomething() */ }
+            ) {
+                Icon(Icons.Filled.Search, "Search")
+            }
         }
     ) { paddingValues ->
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.padding(top = 8.dp).background(MaterialTheme.colorScheme.primaryContainer),
+            modifier = Modifier.padding(top = 8.dp)
+                .background(MaterialTheme.colorScheme.primaryContainer),
             contentPadding = paddingValues
         ) {
             items(items = products) {
