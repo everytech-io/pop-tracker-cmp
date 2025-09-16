@@ -76,7 +76,7 @@ fun ProductCard(
                     config = EveryImageBoxConfig(
                         aspectRatio = config.imageAspectRatio,
                         shape = RoundedCornerShape(config.imageCornerRadius),
-                        contentDescription = product.title
+                        contentDescription = product.name
                     )
                 )
                 
@@ -97,7 +97,7 @@ fun ProductCard(
             
             // Product Title
             EveryText(
-                text = product.title,
+                text = product.name,
                 modifier = Modifier
                     .padding(horizontal = config.horizontalPadding)
                     .fillMaxWidth(),
@@ -112,7 +112,7 @@ fun ProductCard(
             
             // Product Subtitle
             EveryText(
-                text = product.subtitle,
+                text = product.description,
                 modifier = Modifier
                     .padding(horizontal = config.horizontalPadding)
                     .fillMaxWidth(),
@@ -166,8 +166,8 @@ fun ProductCardPreview() {
             ProductCard(
                 product = Product(
                     id = "preview-1",
-                    title = "Labubu Halloween Keychain",
-                    subtitle = "Limited Edition Collectible",
+                    name = "Labubu Halloween Keychain",
+                    description = "Limited Edition Collectible",
                     imageName = "labubu_demo",
                     price = ProductPrice(amount = "15.99"),
                     marketplaces = listOf(

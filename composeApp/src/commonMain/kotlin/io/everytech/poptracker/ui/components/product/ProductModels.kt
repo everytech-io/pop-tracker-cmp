@@ -7,8 +7,8 @@ import poptracker.composeapp.generated.resources.*
 @Serializable
 data class Product(
     val id: String,
-    val title: String,
-    val subtitle: String,
+    val name: String,
+    val description: String,
     val imageName: String,
     val price: ProductPrice,
     val marketplaces: List<MarketplaceLink> = emptyList()
@@ -25,8 +25,8 @@ data class ProductPrice(
 data class MarketplaceLink(
     val name: String,
     val iconName: String? = null,
-    val type: MarketplaceType,
-    val url: String,
+    val type: MarketplaceType = MarketplaceType.Secondary,
+    val url: String = "",
     val price: ProductPrice? = null,
     val availability: AvailabilityStatus = AvailabilityStatus.InStock
 )

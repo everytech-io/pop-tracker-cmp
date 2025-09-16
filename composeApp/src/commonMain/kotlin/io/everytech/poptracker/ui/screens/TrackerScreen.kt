@@ -43,6 +43,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -66,7 +67,7 @@ fun TrackerScreen(
     }
 ) {
 
-    val products = trackerViewModel.products.value
+    val products by trackerViewModel.products.collectAsStateWithLifecycle()
     TrackerScreenContent(modifier = modifier, products = products)
 }
 
@@ -170,10 +171,10 @@ private fun TrackerScreenContent(
 fun TrackerScreenContentPreview() {
     PopTrackerTheme {
 
-        val sampleProducts = TrackerViewModel().products.value
+        // Use empty list for preview
         TrackerScreenContent(
             modifier = Modifier,
-            products = sampleProducts
+            products = emptyList()
         )
     }
 }

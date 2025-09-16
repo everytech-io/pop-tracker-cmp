@@ -19,7 +19,7 @@ kotlin {
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_17)
         }
     }
     
@@ -86,6 +86,8 @@ kotlin {
             implementation("dev.gitlive:firebase-analytics:2.1.0")
             implementation("dev.gitlive:firebase-firestore:2.1.0")
             implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1") // This line
+
+            implementation("co.touchlab:kermit:2.0.4") //Add latest version
 //            implementation(libs.androidx.lifecycle.runtime.compose)
 //            implementation(libs.androidx.lifecycle.viewmodel.compose)
 //            implementation(libs.androidx.navigation.compose)
@@ -138,8 +140,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 
