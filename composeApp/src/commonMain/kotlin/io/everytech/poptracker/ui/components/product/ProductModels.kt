@@ -11,7 +11,9 @@ data class Product(
     val description: String,
     val imageName: String,
     val price: ProductPrice,
-    val marketplaces: List<MarketplaceLink> = emptyList()
+    val officialUrl: String,
+    val marketplaces: List<MarketplaceLink> = emptyList(),
+    val createdAt: String? = null
 )
 
 @Serializable

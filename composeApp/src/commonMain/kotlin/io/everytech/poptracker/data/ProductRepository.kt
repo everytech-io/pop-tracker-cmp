@@ -7,9 +7,10 @@ import io.everytech.poptracker.ui.components.product.Product
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class ProductRepository {
+class ProductRepository(private val countryCode: String = "us") {
     private val firestore = Firebase.firestore
-    private val productsCollection = firestore.collection("PRODUCTS")
+    // Following Firestore best practices: lowercase collection names with underscores
+    private val productsCollection = firestore.collection("products_${countryCode.lowercase()}")
     
     /**
      * Fetches all products from Firestore
@@ -69,6 +70,20 @@ class ProductRepository {
             Logger.e(e) { "Error observing products from Firestore: ${e.message}" }
             // Emit empty list to trigger fallback in ViewModel
             emit(emptyList())
+        }
+    }
+    
+    /**
+     * Adds a new product to the current country's collection
+     */
+    suspend fun addProduct(product: Product) {
+        try {
+            Logger.i { "Adding product ${product.id} to $countryCode" }
+            productsCollection.document(product.id).set(product)
+            Logger.i { "Successfully added product ${product.id}" }
+        } catch (e: Exception) {
+            Logger.e(e) { "Error adding product ${product.id}" }
+            throw e
         }
     }
 }

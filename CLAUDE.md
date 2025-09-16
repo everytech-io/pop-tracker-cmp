@@ -122,3 +122,46 @@ EveryImage(
 - PhotoPortrait (3:4) - Portrait photo format
 - Ultrawide (21:9) - Ultrawide display format
 - Golden (1.618:1) - Golden ratio for artistic layouts
+
+## Firestore Database Structure
+
+### Collection Naming Convention
+Following Firestore best practices, the app uses lowercase collection names with underscores:
+- **Resource type comes first**, country/region second (prevents hotspotting)
+- **Lowercase with underscores** (Firestore convention)
+- **Plural names** for collections (NoSQL standard)
+
+### Collections:
+- **`products_us`** - United States products (USD prices)
+- **`products_ph`** - Philippines products (PHP prices)
+- **`products_my`** - Malaysia products (MYR prices)
+- **`products_sg`** - Singapore products (SGD prices)
+- **`products_global`** - Global/shared products
+
+### Implementation
+```kotlin
+// Repository uses lowercase collection names following Firestore conventions
+class ProductRepository(private val countryCode: String = "sg") {
+    private val productsCollection = firestore.collection("products_${countryCode.lowercase()}")
+}
+```
+
+### Why This Structure?
+- **Avoids hotspotting**: Resource type prefix distributes writes better than country prefix
+- **Query friendly**: Easy to query all products or filter by country
+- **Scalable**: Easy to add new resource types (orders_sg, users_sg, etc.)
+- **Standard compliant**: Follows Firestore's recommended naming conventions
+
+### Product Document Structure
+Each product document follows the structure defined in `ProductModels.kt`:
+```kotlin
+Product(
+    id: String,           // UUID
+    name: String,
+    description: String,
+    imageName: String,    // Maps to drawable resource
+    price: ProductPrice,
+    marketplaces: List<MarketplaceLink>,
+    createdAt: String?
+)
+```

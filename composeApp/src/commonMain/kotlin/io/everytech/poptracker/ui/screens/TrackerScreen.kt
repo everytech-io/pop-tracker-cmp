@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.TrendingUp
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Bookmarks
@@ -62,13 +63,18 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun TrackerScreen(
     modifier: Modifier = Modifier,
+    onNavigateToAddProduct: () -> Unit = {},
     trackerViewModel: TrackerViewModel = viewModel {
         TrackerViewModel()
     }
 ) {
 
     val products by trackerViewModel.products.collectAsStateWithLifecycle()
-    TrackerScreenContent(modifier = modifier, products = products)
+    TrackerScreenContent(
+        modifier = modifier, 
+        products = products,
+        onNavigateToAddProduct = onNavigateToAddProduct
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -76,6 +82,7 @@ fun TrackerScreen(
 private fun TrackerScreenContent(
     modifier: Modifier = Modifier,
     products: List<Product>,
+    onNavigateToAddProduct: () -> Unit = {},
 ) {
 
     val topAppBarState: TopAppBarState = rememberTopAppBarState()
@@ -93,6 +100,8 @@ private fun TrackerScreenContent(
 
     val exitAlwaysScrollBehavior =
         FloatingToolbarDefaults.exitAlwaysScrollBehavior(exitDirection = Bottom)
+    var expanded by rememberSaveable { mutableStateOf(true) }
+    val vibrantColors = FloatingToolbarDefaults.vibrantFloatingToolbarColors()
     Scaffold(
         modifier = modifier
             .fillMaxSize()
@@ -138,13 +147,32 @@ private fun TrackerScreenContent(
         // When setting this to `FabPosition.Start` remember to set a
         // `floatingActionButtonPosition = FloatingToolbarHorizontalFabPosition.Start` at the
         // HorizontalFloatingToolbar as well.
-        floatingActionButtonPosition = FabPosition.End,
+        floatingActionButtonPosition = FabPosition.Center,
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = { /* doSomething() */ }
-            ) {
-                Icon(Icons.Filled.Search, "Search")
-            }
+
+            HorizontalFloatingToolbar(
+                expanded = expanded,
+                floatingActionButton = {
+                    // Match the FAB to the vibrantColors. See also StandardFloatingActionButton.
+                    FloatingToolbarDefaults.VibrantFloatingActionButton(
+                        onClick = onNavigateToAddProduct
+                    ) {
+                        Icon(Icons.Filled.Add, "Add Product")
+                    }
+                },
+                colors = vibrantColors,
+                content = {
+                    IconButton(onClick = { /* doSomething() */ }) {
+                        Icon(Icons.Outlined.Home, contentDescription = "Localized description")
+                    }
+                    IconButton(onClick = { /* doSomething() */ }) {
+                        Icon(Icons.Outlined.Bookmarks, contentDescription = "Localized description")
+                    }
+                    IconButton(onClick = { /* doSomething() */ }) {
+                        Icon(Icons.Outlined.Search, contentDescription = "Localized description")
+                    }
+                },
+            )
         }
     ) { paddingValues ->
         LazyVerticalGrid(
@@ -174,7 +202,8 @@ fun TrackerScreenContentPreview() {
         // Use empty list for preview
         TrackerScreenContent(
             modifier = Modifier,
-            products = emptyList()
+            products = emptyList(),
+            onNavigateToAddProduct = {}
         )
     }
 }

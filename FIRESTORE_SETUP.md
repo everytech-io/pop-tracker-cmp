@@ -16,10 +16,32 @@ The app is getting a "PERMISSION_DENIED: Missing or insufficient permissions" er
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow read access to products collection for all users
+    // Allow read/write access to country-specific product collections
+    // Following Firestore best practices: lowercase with underscores
+    match /products_us/{document=**} {
+      allow read, write: if true;
+    }
+    
+    match /products_ph/{document=**} {
+      allow read, write: if true;
+    }
+    
+    match /products_my/{document=**} {
+      allow read, write: if true;
+    }
+    
+    match /products_sg/{document=**} {
+      allow read, write: if true;
+    }
+    
+    match /products_global/{document=**} {
+      allow read, write: if true;
+    }
+    
+    // Legacy collection (for backward compatibility if needed)
     match /products/{document=**} {
       allow read: if true;
-      allow write: if false;  // Disable writes from client for now
+      allow write: if false;
     }
     
     // Default deny for other collections
@@ -40,7 +62,15 @@ For production, you should implement more secure rules:
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Products are publicly readable but only writable by authenticated admins
+    // Country-specific product collections are publicly readable
+    // but only writable by authenticated users (or admins)
+    match /PRODUCTS_{country}/{productId} {
+      allow read: if true;
+      allow write: if request.auth != null;  // Require authentication for writes
+      // For admin-only writes, use: request.auth.token.admin == true
+    }
+    
+    // Legacy lowercase collection (for backward compatibility)
     match /products/{productId} {
       allow read: if true;
       allow write: if request.auth != null && 

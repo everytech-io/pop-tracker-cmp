@@ -13,6 +13,7 @@ sealed class Screen(
     val title: String
 ) {
     object Tracker : Screen(route = "tracker", icon = Res.drawable.compose_multiplatform, title = "Link Tracker")
+    object AddProduct : Screen(route = "add_product", icon = Res.drawable.icon_collection, title = "Add Product")
 }
 
 val bottomNavItems = listOf(
