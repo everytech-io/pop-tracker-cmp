@@ -35,12 +35,6 @@ import io.everytech.poptracker.ui.components.everyapp.EveryTextStyle
 import io.everytech.poptracker.ui.theme.PopTrackerTheme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import poptracker.composeapp.generated.resources.Res
-import poptracker.composeapp.generated.resources.labubu_demo
-import poptracker.composeapp.generated.resources.lazada
-import poptracker.composeapp.generated.resources.popmart
-import poptracker.composeapp.generated.resources.shopee
-import poptracker.composeapp.generated.resources.tiktok
 
 @Immutable
 data class ProductCardConfig(
@@ -78,7 +72,7 @@ fun ProductCard(
             // Product Image with Bookmark button
             Box {
                 EveryImageBox(
-                    painter = painterResource(product.imageDrawableResource),
+                    painter = painterResource(product.imageResource),
                     config = EveryImageBoxConfig(
                         aspectRatio = config.imageAspectRatio,
                         shape = RoundedCornerShape(config.imageCornerRadius),
@@ -174,33 +168,33 @@ fun ProductCardPreview() {
                     id = "preview-1",
                     title = "Labubu Halloween Keychain",
                     subtitle = "Limited Edition Collectible",
-                    imageDrawableResource = Res.drawable.labubu_demo,
+                    imageName = "labubu_demo",
                     price = ProductPrice(amount = "15.99"),
                     marketplaces = listOf(
                         MarketplaceLink(
                             "Popmart",
-                            iconDrawableResource = Res.drawable.popmart,
+                            iconName = "popmart",
                             type = MarketplaceType.Official,
                             url = "",
                             availability = AvailabilityStatus.InStock
                         ),
                         MarketplaceLink(
                             "Shopee",
-                            iconDrawableResource = Res.drawable.shopee,
+                            iconName = "shopee",
                             type = MarketplaceType.Secondary,
                             url = "",
                             availability = AvailabilityStatus.OutOfStock
                         ),
                         MarketplaceLink(
                             "Lazada",
-                            iconDrawableResource = Res.drawable.lazada,
+                            iconName = "lazada",
                             type = MarketplaceType.Secondary,
                             url = "",
                             availability = AvailabilityStatus.InStock
                         ),
                         MarketplaceLink(
                             "TikTok",
-                            iconDrawableResource = Res.drawable.tiktok,
+                            iconName = "tiktok",
                             type = MarketplaceType.Secondary,
                             url = "",
                             availability = AvailabilityStatus.InStock

@@ -22,6 +22,7 @@ import io.everytech.poptracker.ui.components.everyapp.EveryIconButtonSize
 import io.everytech.poptracker.ui.components.everyapp.EveryIconButtonStyle
 import io.everytech.poptracker.ui.components.everyapp.ButtonIcon
 import io.everytech.poptracker.ui.components.everyapp.IconPosition
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -61,7 +62,7 @@ fun MarketplaceButtonRow(
     ) {
         marketplaces.forEach { link ->
             EveryIconButton(
-                painter = painterResource(link.iconDrawableResource),
+                painter = painterResource(link.iconResource),
                 onClick = { onMarketplaceClick(link) },
                 config = EveryIconButtonConfig(
                     style = EveryIconButtonStyle.Elevated,
