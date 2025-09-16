@@ -63,9 +63,6 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
-            implementation("dev.gitlive:firebase-common:2.1.0")
-            implementation("dev.gitlive:firebase-analytics:2.1.0")
-            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1") // This line
 
 //            implementation(project.dependencies.platform("com.google.firebase:firebase-bom:34.2.0"))
 //
@@ -75,8 +72,6 @@ kotlin {
 //            implementation("com.google.firebase:firebase-analytics")
         }
         iosMain.dependencies {
-            implementation("dev.gitlive:firebase-common:2.1.0")
-            implementation("dev.gitlive:firebase-analytics:2.1.0")
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -87,6 +82,10 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(compose.materialIconsExtended)
+            implementation("dev.gitlive:firebase-common:2.1.0")
+            implementation("dev.gitlive:firebase-analytics:2.1.0")
+            implementation("dev.gitlive:firebase-firestore:2.1.0")
+            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1") // This line
 //            implementation(libs.androidx.lifecycle.runtime.compose)
 //            implementation(libs.androidx.lifecycle.viewmodel.compose)
 //            implementation(libs.androidx.navigation.compose)

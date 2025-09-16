@@ -12,6 +12,7 @@
 		1E2806012E6F20CA007C44EA /* FirebaseAnalyticsIdentitySupport in Frameworks */ = {isa = PBXBuildFile; productRef = 1E2806002E6F20CA007C44EA /* FirebaseAnalyticsIdentitySupport */; };
 		1E2806032E6F20CA007C44EA /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 1E2806022E6F20CA007C44EA /* FirebaseCore */; };
 		1E2806052E6F20CA007C44EA /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 1E2806042E6F20CA007C44EA /* FirebaseCrashlytics */; };
+		1EA2B4EE2E788ED300190B30 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 1EA2B4ED2E788ED300190B30 /* FirebaseFirestore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +55,7 @@
 				1E2806052E6F20CA007C44EA /* FirebaseCrashlytics in Frameworks */,
 				1E2806032E6F20CA007C44EA /* FirebaseCore in Frameworks */,
 				1E2806012E6F20CA007C44EA /* FirebaseAnalyticsIdentitySupport in Frameworks */,
+				1EA2B4EE2E788ED300190B30 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -103,6 +105,7 @@
 				1E2806002E6F20CA007C44EA /* FirebaseAnalyticsIdentitySupport */,
 				1E2806022E6F20CA007C44EA /* FirebaseCore */,
 				1E2806042E6F20CA007C44EA /* FirebaseCrashlytics */,
+				1EA2B4ED2E788ED300190B30 /* FirebaseFirestore */,
 			);
 			productName = iosApp;
 			productReference = B9DA97B12DC1472C00A4DA20 /* PopTracker.app */;
@@ -434,6 +437,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1E2805FB2E6F20CA007C44EA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseCrashlytics;
+		};
+		1EA2B4ED2E788ED300190B30 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1E2805FB2E6F20CA007C44EA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
