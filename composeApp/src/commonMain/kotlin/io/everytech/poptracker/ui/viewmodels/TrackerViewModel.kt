@@ -70,6 +70,7 @@ class TrackerViewModel : ViewModel() {
                 description = "Limited Edition Collectible",
                 imageName = "labubu_demo",
                 price = ProductPrice(amount = "15.99"),
+                officialUrl = "https://www.popmart.com/products/labubu-halloween",
                 marketplaces = listOf(
                     MarketplaceLink(
                         name = "Popmart",
@@ -107,6 +108,7 @@ class TrackerViewModel : ViewModel() {
                 description = "Series 1 Mystery Figure",
                 imageName = "labubu_demo",
                 price = ProductPrice(amount = "12.99"),
+                officialUrl = "https://www.popmart.com/products/crybaby-labubu",
                 marketplaces = emptyList()
             ),
             Product(
@@ -115,6 +117,7 @@ class TrackerViewModel : ViewModel() {
                 description = "Astronaut Edition",
                 imageName = "labubu_demo",
                 price = ProductPrice(amount = "14.99"),
+                officialUrl = "https://www.popmart.com/products/dimoo-space-travel",
                 marketplaces = emptyList()
             ),
             Product(
@@ -123,6 +126,7 @@ class TrackerViewModel : ViewModel() {
                 description = "Glow in the Dark",
                 imageName = "labubu_demo",
                 price = ProductPrice(amount = "16.99"),
+                officialUrl = "https://www.popmart.com/products/skull-panda-city-night",
                 marketplaces = emptyList()
             )
         )

@@ -161,7 +161,32 @@ Product(
     description: String,
     imageName: String,    // Maps to drawable resource
     price: ProductPrice,
+    officialUrl: String,  // Required official store URL
     marketplaces: List<MarketplaceLink>,
     createdAt: String?
 )
 ```
+
+## Development Plan: CRUD Operations
+
+### Current Status (Completed)
+- ✅ **Create**: AddProductScreen with comprehensive form UI and country selection
+- ✅ **Read**: Product listing in TrackerScreen with Firestore integration  
+- ✅ **Repository**: ProductRepository with addProduct() method
+- ✅ **Models**: Serializable Product with required officialUrl field
+- ✅ **Navigation**: Basic routing between Tracker and AddProduct screens
+
+### Next Steps (See DEVELOPMENT_PLAN.md)
+1. **Product Detail Screen** - Enhanced read functionality with full product display
+2. **Edit Product Screen** - Update functionality with pre-populated form
+3. **Delete Functionality** - Delete with confirmation dialogs and error handling
+4. **Enhanced Navigation** - Arguments, transitions, and deep linking
+5. **Error Handling** - Comprehensive error states and retry mechanisms
+6. **Testing** - Unit, integration, and UI tests across platforms
+
+### Implementation Priority
+- **Day 1**: ProductDetailScreen → EditProductScreen  
+- **Day 2**: Delete functionality → Enhanced navigation
+- **Day 3**: Error handling → Testing & polish
+
+See `/DEVELOPMENT_PLAN.md` for detailed implementation roadmap.

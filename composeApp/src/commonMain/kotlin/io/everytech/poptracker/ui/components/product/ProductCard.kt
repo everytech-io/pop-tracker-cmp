@@ -170,6 +170,7 @@ fun ProductCardPreview() {
                     description = "Limited Edition Collectible",
                     imageName = "labubu_demo",
                     price = ProductPrice(amount = "15.99"),
+                    officialUrl = "https://www.popmart.com/products/labubu-halloween",
                     marketplaces = listOf(
                         MarketplaceLink(
                             "Popmart",
